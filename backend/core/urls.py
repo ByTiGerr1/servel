@@ -15,7 +15,7 @@ urlpatterns = [
     path('candidatos/<int:pk>/', CandidatoDetailView.as_view(), name='candidato-detail'),
 
     path('preguntas/', PreguntasPendientesView.as_view(), name='pregunta-list'),
-    path('match-candidatos/', MatchCandidatoViewSet.as_view({'get': 'get_match_candidatos'}), name='match-candidatos'),
+    path('match-candidatos/', MatchCandidatoViewSet.as_view({'get': 'match_candidatos'}), name='match-candidatos'),
 
     path('respuestas/', SubmitUserAnswersView.as_view(), name='submit-answers'),
 

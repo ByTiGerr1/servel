@@ -26,7 +26,7 @@ class Candidato {
   // Constructor factory para crear una instancia de Candidato desde un JSON
   factory Candidato.fromJson(Map<String, dynamic> json) {
     return Candidato(
-      id: json['id'] as int,
+      id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
       nombre: json['nombre'] as String,
       apellido: json['apellido'] as String,
       partido: json['partido'] as String, // Asegúrate de que el campo 'partido' esté presente en el JSON
@@ -36,7 +36,9 @@ class Candidato {
       // `perfile_picture` puede ser null si no hay imagen
       perfilePicture: json['perfile_picture'] as String?,
       // Castear a List<dynamic> y luego mapear a List<int>
-      tiposEleccion: List<int>.from(json['tipos_eleccion'] as List<dynamic>),
+      tiposEleccion: List<int>.from(
+        (json['tipos_eleccion'] as List<dynamic>?)?.map((e) => int.tryParse(e?.toString() ?? '0') ?? 0) ?? [],
+      ),
       // Castear a List<dynamic> y luego mapear a List<String>
       tiposEleccionNombres: List<String>.from(json['tipos_eleccion_nombres'] as List<dynamic>),
     );
@@ -65,21 +67,23 @@ class Candidato {
 
 // Modelo para el resultado del Match (usado en MatchCandidatosView)
 class MatchResult {
-  final Candidato candidato;
+  final Candidato? candidato;
   final double matchPercentage;
   final int preguntasConsideradas;
 
   MatchResult({
-    required this.candidato,
+    this.candidato,
     required this.matchPercentage,
     required this.preguntasConsideradas,
   });
 
   factory MatchResult.fromJson(Map<String, dynamic> json) {
     return MatchResult(
-      candidato: Candidato.fromJson(json['candidato'] as Map<String, dynamic>),
-      matchPercentage: (json['match_percentage'] as num).toDouble(), // Asegura que sea double
-      preguntasConsideradas: json['preguntas_consideradas'] as int,
+      candidato: json['candidato_data'] != null 
+          ? Candidato.fromJson(json['candidato_data'] as Map<String, dynamic>)
+          : null, // Si es null, asigna null
+      matchPercentage: double.tryParse(json['match_percentage']?.toString() ?? '0.0') ?? 0.0,
+      preguntasConsideradas: int.tryParse(json['preguntas_consideradas']?.toString() ?? '0') ?? 0,
     );
   }
 }
@@ -100,8 +104,8 @@ class CandidatoFavorito {
 
   factory CandidatoFavorito.fromJson(Map<String, dynamic> json) {
     return CandidatoFavorito(
-      id: json['id'] as int,
-      candidatoId: json['candidato'] as int, // `candidato` será el ID en el JSON
+      id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+      candidatoId: int.tryParse(json['candidato']?.toString() ?? '0') ?? 0,
       candidatoData: json['candidato_data'] != null
           ? Candidato.fromJson(json['candidato_data'] as Map<String, dynamic>)
           : null, // Si el backend envía 'candidato_data', parselo
@@ -126,8 +130,8 @@ class CandidatoDescartado {
 
   factory CandidatoDescartado.fromJson(Map<String, dynamic> json) {
     return CandidatoDescartado(
-      id: json['id'] as int,
-      candidatoId: json['candidato'] as int,
+      id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+      candidatoId: int.tryParse(json['candidato']?.toString() ?? '0') ?? 0,
       candidatoData: json['candidato_data'] != null
           ? Candidato.fromJson(json['candidato_data'] as Map<String, dynamic>)
           : null,
@@ -158,13 +162,13 @@ class DecisionFinal {
 
   factory DecisionFinal.fromJson(Map<String, dynamic> json) {
     return DecisionFinal(
-      id: json['id'] as int,
-      userId: json['user'] as int,
-      candidatoElegidoId: json['candidato_elegido'] as int,
+      id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+      userId: int.tryParse(json['user']?.toString() ?? '0') ?? 0,
+      candidatoElegidoId: int.tryParse(json['candidato_elegido']?.toString() ?? '0') ?? 0,
       candidatoElegidoData: json['candidato_elegido_data'] != null
           ? Candidato.fromJson(json['candidato_elegido_data'] as Map<String, dynamic>)
           : null, // Si incluyes esto en el serializador de Django
-      tipoEleccionId: json['tipo_eleccion'] as int,
+      tipoEleccionId: int.tryParse(json['tipo_eleccion']?.toString() ?? '0') ?? 0,
       tipoEleccionNombre: json['tipo_eleccion_nombre'] as String?, // Asegúrate que el backend lo envíe
       fechaDecision: DateTime.parse(json['fecha_decision'] as String),
     );

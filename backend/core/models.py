@@ -102,9 +102,9 @@ class Candidato(models.Model):
         return f"{self.nombre} {self.apellido}"
 
 class PosturaCandidato(models.Model):
-    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE, related_name='posturas')
-    pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE, related_name='posturas_candidatos')
-    opcion_respuesta = models.ForeignKey(OpcionRespuesta, on_delete=models.CASCADE, related_name='posturas_asociadas')
+    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE, related_name='posturas_candidato')
+    pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+    opcion_respuesta = models.ForeignKey(OpcionRespuesta, on_delete=models.CASCADE)
     justificacion = models.TextField(blank=True, null=True, help_text="Breve justificación de la postura del candidato sobre el tema.")
 
     class Meta:

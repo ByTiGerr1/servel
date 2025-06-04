@@ -116,6 +116,7 @@ class CandidateService {
     );
 
     if (response.statusCode == 200) {
+      print('DEBUG: JSON de match-candidatos recibido: ${response.body}');
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
       return body.map((dynamic item) => MatchResult.fromJson(item as Map<String, dynamic>)).toList();
     } else if (response.statusCode == 401) {

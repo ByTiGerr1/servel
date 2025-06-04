@@ -14,7 +14,7 @@ class MatchResultScreen extends StatefulWidget {
 
 class _MatchResultScreenState extends State<MatchResultScreen> {
   late Future<List<MatchResult>> _matchResultsFuture;
-  final CandidateService _candidateService = CandidateService(); // Instancia de tu servicio
+  final CandidateService _candidateService = CandidateService();
 
   @override
   void initState() {
@@ -24,7 +24,6 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
 
   void _fetchMatchResults() {
     setState(() {
-      // Llamamos al servicio para obtener los resultados del match
       _matchResultsFuture = _candidateService.getMatchCandidatos(widget.tipoEleccionId);
     });
   }
@@ -32,6 +31,9 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Match"),
+      ),
       body: FutureBuilder<List<MatchResult>>(
         future: _matchResultsFuture,
         builder: (context, snapshot) {
@@ -66,7 +68,16 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final matchResult = snapshot.data![index];
-                final candidato = matchResult.candidato;
+                // Asegúrate de que 'candidato' no sea null antes de usarlo.
+                // Si es null, podríamos mostrar un widget vacío o un error.
+                if (matchResult.candidato == null) {
+                  return const SizedBox.shrink(); // O un Text('Candidato no disponible')
+                }
+
+                // Ahora que hemos comprobado que 'candidato' no es null,
+                // podemos usar '!' para acceder a sus propiedades de forma segura.
+                // O seguir usando '?.'. El '!' es más conciso si ya se sabe que no es null.
+                final candidato = matchResult.candidato!; // <-- Ahora sabemos que no es null
 
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
@@ -78,6 +89,9 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.blueGrey[100],
+                      // Usar 'candidato.perfilePicture' directamente
+                      // como 'candidato' ya no es null por la comprobación anterior.
+                      // 'perfilePicture' sigue siendo nullable, así que usamos '?.isNotEmpty'
                       backgroundImage: candidato.perfilePicture != null && candidato.perfilePicture!.isNotEmpty
                           ? NetworkImage(candidato.perfilePicture!) // Usa NetworkImage para URLs
                           : null,
@@ -87,6 +101,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
                     ),
                     // Nombre y partido del candidato
                     title: Text(
+                      // Acceso directo a nombre y apellido porque 'candidato' ya no es null
                       '${candidato.nombre} ${candidato.apellido}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -98,6 +113,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
+                          // Acceso directo a partido
                           candidato.partido,
                           style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                         ),
@@ -119,6 +135,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          // Acceso directo al ID del candidato
                           builder: (context) => CandidateDetailScreen(candidatoId: candidato.id),
                         ),
                       );
