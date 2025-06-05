@@ -1,8 +1,10 @@
 // lib/screens/match_results_screen.dart
 import 'package:flutter/material.dart';
+import 'package:servel/config/app_config.dart';
 import 'package:servel/models/candidato_model.dart';
 import 'package:servel/screens/match/candidate_detail_screen.dart';
 import 'package:servel/services/candidate_service.dart';
+import 'package:tcard/tcard.dart';
 
 class MatchResultScreen extends StatefulWidget {
   final int tipoEleccionId; // ID del tipo de elección (e.g., presidencial)
@@ -14,7 +16,9 @@ class MatchResultScreen extends StatefulWidget {
 
 class _MatchResultScreenState extends State<MatchResultScreen> {
   late Future<List<MatchResult>> _matchResultsFuture;
+  List<MatchResult> _matchResults = [];
   final CandidateService _candidateService = CandidateService();
+  final TCardController _controller = TCardController();
 
   @override
   void initState() {
@@ -62,23 +66,15 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
               ),
             );
           } else {
-            // Si los datos están disponibles, construye la lista
             return ListView.builder(
               padding: const EdgeInsets.all(8.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final matchResult = snapshot.data![index];
-                // Asegúrate de que 'candidato' no sea null antes de usarlo.
-                // Si es null, podríamos mostrar un widget vacío o un error.
                 if (matchResult.candidato == null) {
-                  return const SizedBox.shrink(); // O un Text('Candidato no disponible')
+                  return const SizedBox.shrink(); 
                 }
-
-                // Ahora que hemos comprobado que 'candidato' no es null,
-                // podemos usar '!' para acceder a sus propiedades de forma segura.
-                // O seguir usando '?.'. El '!' es más conciso si ya se sabe que no es null.
-                final candidato = matchResult.candidato!; // <-- Ahora sabemos que no es null
-
+                final candidato = matchResult.candidato!; 
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                   elevation: 5,
@@ -89,24 +85,20 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.blueGrey[100],
-                      // Usar 'candidato.perfilePicture' directamente
-                      // como 'candidato' ya no es null por la comprobación anterior.
-                      // 'perfilePicture' sigue siendo nullable, así que usamos '?.isNotEmpty'
                       backgroundImage: candidato.perfilePicture != null && candidato.perfilePicture!.isNotEmpty
-                          ? NetworkImage(candidato.perfilePicture!) // Usa NetworkImage para URLs
-                          : null,
+                        ? NetworkImage('${AppConfig.baseUrl}${candidato.perfilePicture}') // <--- ¡CAMBIO AQUÍ!
+                        : null,
                       child: candidato.perfilePicture == null || candidato.perfilePicture!.isEmpty
-                          ? Icon(Icons.person, size: 30, color: Colors.blueGrey[700])
+                          ? Icon(Icons.person, size: 80, color: const Color.fromARGB(255, 15, 161, 230))
                           : null,
                     ),
                     // Nombre y partido del candidato
                     title: Text(
-                      // Acceso directo a nombre y apellido porque 'candidato' ya no es null
                       '${candidato.nombre} ${candidato.apellido}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.deepPurple,
+                        color: Color.fromARGB(255, 183, 58, 58),
                       ),
                     ),
                     subtitle: Column(
@@ -119,14 +111,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
                         ),
                         const SizedBox(height: 4),
                         // Porcentaje de coincidencia
-                        Text(
-                          'Coincidencia: ${matchResult.matchPercentage.toStringAsFixed(2)}%',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.green[700],
-                          ),
-                        ),
+
                       ],
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),

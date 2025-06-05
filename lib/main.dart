@@ -6,10 +6,6 @@ import 'package:servel/screens/auth/login_screen.dart';
 import 'package:servel/screens/match/match_over_screen.dart';
 import 'package:servel/screens/match/match_results_screen.dart';
 import 'package:servel/screens/onboarding_screen.dart';
-import 'package:servel/screens/preguntas/pregunta_cuatro_screen.dart';
-import 'package:servel/screens/preguntas/pregunta_dos_screen.dart';
-import 'package:servel/screens/preguntas/pregunta_tres_screen.dart';
-import 'package:servel/screens/preguntas/pregunta_uno_screen.dart';
 import 'package:servel/screens/auth/register_screen.dart';
 
 void main() {
@@ -43,10 +39,6 @@ class MainApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           routes: {
-            '/preguntaUno': (context) => const PreguntaUnoScreen(),
-            '/preguntaDos': (context) => const PreguntaDosScreen(),
-            '/preguntaTres': (context) => const PreguntaTresScreen(),
-            '/preguntaCuatro': (context) => const PreguntaCuatroScreen(),
             '/matchLaunch': (context) => const MatchResultScreen(tipoEleccionId: 1),
             '/matchOver': (context) => const MatchOverScreen(),            
             '/home': (context) => const HomeScreen(),            
