@@ -20,31 +20,30 @@ class MatchLaunchScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(40.w),
-              child: Text(
-                "Tenemos candidatos que podrian interesarte!",
-                style: TextStyle(
-                  fontSize: 35.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffe2000d),
-                ),
-                textAlign: TextAlign.center,
+            Text(
+              "Tenemos candidatos que podrian interesarte!",
+              style: TextStyle(
+                fontSize: 35.sp,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffe2000d),
               ),
+              textAlign: TextAlign.center,
             ),
-            
             // Imágenes
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildImageCard('assets/Boric.jpg'),
-                _buildImageCard('assets/Michelle.jpg'),
-              ],
+            Container(
+              padding: EdgeInsets.only(top: 35),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildImageCard('assets/Boric.jpg'),
+                  _buildImageCard('assets/Michelle.jpg'),
+                ],
+              ),
             ),
             
             // Botón "Haz match"
             Padding(
-                padding: EdgeInsets.only(top: 8.h),
+                padding: EdgeInsets.only(top: 45.h),
                 child: RedButton(text: "Haz Match", 
                 onPressed: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -65,9 +64,12 @@ class MatchLaunchScreen extends StatelessWidget {
                 }
 ,),
               ),
-              SecondaryTextButton(text: "Todavia no", onPressed: () {
-                Navigator.pop(context);
-              },),
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                child: SecondaryTextButton(text: "Todavia no", onPressed: () {
+                  Navigator.pop(context);
+                },),
+              ),
           ],
         ),
       ),

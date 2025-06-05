@@ -54,14 +54,14 @@ class MatchOverScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 200.sp, 0, 8.sp),
               child: RedButton(text: "Feed", 
               onPressed: () {
-                Navigator.pushNamed(context, '/homeScreen');
+                Navigator.pushNamed(context, '/home');
                 },
                 ),
             ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SecondaryTextButton(text: "Seguir", onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/matchSwipe');
+                  Navigator.pushReplacementNamed(context, '/matchLaunch');
                   },),
               ),
             
