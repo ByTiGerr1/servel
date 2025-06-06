@@ -147,3 +147,17 @@ class DecisionFinal(models.Model):
         unique_together = ('user', 'tipo_eleccion')
     def __str__(self):
         return f"{self.user.username} eligió a {self.candidato_elegido.nombre} para {self.tipo_eleccion.nombre}"
+
+class Noticia(models.Model):
+    titulo = models.CharField(max_length=200)
+    descripcion = models.TextField()
+    fecha_publicacion = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name_plural = "Noticias"
+        unique_together = ('titulo', 'descripcion')
+        ordering = ['-fecha_publicacion']
+    
+    def __str__(self):
+        return self.titulo
+    

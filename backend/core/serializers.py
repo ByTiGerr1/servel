@@ -12,7 +12,8 @@ from .models import (
     CandidatoDescartado,
     DecisionFinal,
     RespuestaUsuario,
-    MatchCandidato
+    MatchCandidato,
+    Noticia
 )
 from django.contrib.auth import get_user_model
 from decimal import Decimal
@@ -149,6 +150,12 @@ class CandidatoFavoritoSerializer(serializers.ModelSerializer):
         fields = ['id', 'candidato', 'fecha_agregado', 'candidato_data']
         read_only_fields = ['fecha_agregado', 'candidato_data']
 
+    def validate(self, data):
+        user = self.context['request'].user
+        if CandidatoFavorito.objects.filter(user=user, candidato=data['candidato']).exists():
+            raise serializers.ValidationError("Este candidato ya está en tus favoritos.")
+        return data
+    
 class CandidatoDescartadoSerializer(serializers.ModelSerializer):
     candidato_data = CandidatoSerializer(source='candidato', read_only=True)
 
@@ -186,3 +193,9 @@ class RespuestaUsuarioReadSerializer(serializers.ModelSerializer):
         model = RespuestaUsuario
         fields = ['id', 'pregunta', 'pregunta_texto', 'opcion_elegida', 'opcion_elegida_texto', 'opcion_elegida_valor', 'fecha_respuesta']
         read_only_fields = ['id', 'fecha_respuesta']
+
+class NoticiaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Noticia
+        fields = ['id', 'titulo', 'descripcion', 'fecha_publicacion', 'actualizado_en']
+        read_only_fields = ['fecha_publicacion', 'actualizado_en']

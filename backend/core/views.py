@@ -16,12 +16,12 @@ from django.db.models import Prefetch, Count, Case, When, F, ExpressionWrapper, 
 from .models import (
     TipoEleccion, Candidato, Pregunta, OpcionRespuesta,
     PosturaCandidato, RespuestaUsuario, CandidatoFavorito,
-    CandidatoDescartado, MatchCandidato
+    CandidatoDescartado, MatchCandidato, Noticia
 )
 from .serializers import (
     UserSerializer, TipoEleccionSerializer, CandidatoSerializer,
     PreguntaSerializer, RespuestaUsuarioCreateSerializer, MatchCandidatoResultSerializer,
-    CandidatoFavoritoSerializer, CandidatoDescartadoSerializer,
+    CandidatoFavoritoSerializer, CandidatoDescartadoSerializer, NoticiaSerializer
 )
 
 # --- Vistas de Autenticación y Registro ---
@@ -258,21 +258,7 @@ class CandidatoFavoritoViewSet(
         return CandidatoFavorito.objects.filter(user=self.request.user).select_related('candidato')
 
     def perform_create(self, serializer):
-        try:
-            # Asegura que no se cree un favorito duplicado, aunque el unique_together lo maneja a nivel de DB
-            existing_favorite = CandidatoFavorito.objects.filter(
-                user=self.request.user,
-                candidato=serializer.validated_data['candidato']
-            ).first()
-            if existing_favorite:
-                raise serializers.ValidationError({"detail": "Este candidato ya está en tus favoritos."})
-            serializer.save(user=self.request.user)
-        except Exception as e:
-            # Captura excepciones de validación o de base de datos
-            # Asegúrate de que las excepciones de DB se manejen limpiamente.
-            if "duplicate key value violates unique constraint" in str(e).lower():
-                raise serializers.ValidationError({"detail": "Este candidato ya está en tus favoritos."})
-            raise serializers.ValidationError({"detail": f"Error al agregar a favoritos: {e}"})
+        serializer.save(user=self.request.user)
 
 
 class CandidatoDescartadoViewSet(
@@ -302,3 +288,12 @@ class CandidatoDescartadoViewSet(
                 raise serializers.ValidationError({"detail": "Este candidato ya ha sido descartado."})
             raise serializers.ValidationError({"detail": f"Error al descartar candidato: {e}"})
 
+class NoticiaListCreateView(generics.ListCreateAPIView):
+    queryset = Noticia.objects.all()
+    serializer_class = NoticiaSerializer
+    permission_classes = [permissions.AllowAny]
+
+class NoticiaDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Noticia.objects.all()
+    serializer_class = NoticiaSerializer
+    permission_classes = [permissions.AllowAny]

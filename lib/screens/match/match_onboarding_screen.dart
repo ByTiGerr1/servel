@@ -15,6 +15,7 @@ class MatchLaunchScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffFFFFFF),
       ),
       body: SingleChildScrollView(

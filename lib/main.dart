@@ -7,6 +7,7 @@ import 'package:servel/screens/launcher_screen.dart';
 import 'package:servel/screens/match/match_over_screen.dart';
 import 'package:servel/screens/match/match_results_screen.dart';
 import 'package:servel/screens/auth/register_screen.dart';
+import 'package:servel/screens/onboarding_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -28,7 +29,7 @@ class MainApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           title: "Servel",
-          home: const LauncherScreen(),
+          home: const OnboardingScreen(),
           supportedLocales: const [
             Locale('es', 'ES'),
             Locale('en', 'US'),

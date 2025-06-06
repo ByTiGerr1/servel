@@ -2,16 +2,13 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // ¡Importante!
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; 
 import 'package:servel/models/candidato_model.dart';
 import 'package:servel/models/questionn_models.dart';
 import 'package:servel/models/tipo_eleccion_model.dart';
 
 class CandidateService {
-  // Asegúrate de que esta sea la URL base de tu API de Django
-  // Para emulador Android: 'http://10.0.2.2:8000/api'
-  // Para iOS o dispositivo físico: 'http://<Tu_IP_Local>:8000/api'
-  final String _baseUrl = 'http://10.0.2.2:8000/api'; // Cambia esto según tu configuración
+  final String _baseUrl = 'http://10.0.2.2:8000/api'; 
 
   // Instancia de FlutterSecureStorage
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -129,7 +126,7 @@ class CandidateService {
   // --- Servicios para Favoritos ---
   Future<List<CandidatoFavorito>> getFavoritos() async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/favoritos/'),
+      Uri.parse('$_baseUrl/candidatos-favoritos/'),
       headers: await _getHeaders(),
     );
 

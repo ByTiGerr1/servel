@@ -10,7 +10,8 @@ from .models import (
     DecisionFinal,
     OPCIONES_ACUERDO_DESACUERDO,
     crear_opciones_acuerdo_desacuerdo,
-    RespuestaUsuario
+    RespuestaUsuario,
+    Noticia
 )
 
 # --- Define OpcionRespuestaInline PRIMERO ---
@@ -21,6 +22,7 @@ class OpcionRespuestaInline(admin.TabularInline):
 
 admin.site.register(TipoEleccion)
 admin.site.register(RespuestaUsuario)
+admin.site.register(Noticia)
 
 @admin.register(Candidato)
 class CandidatoAdmin(admin.ModelAdmin):
