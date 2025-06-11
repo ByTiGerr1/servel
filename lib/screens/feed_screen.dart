@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:servel/models/noticia_model.dart';
-import 'package:servel/services/noticias_service.dart';
+import 'package:servel/models/news_article_model.dart';
+import 'package:servel/services/world_news_api_service.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -10,19 +10,19 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  late Future<List<Noticia>> _futureNoticias;
-  final NoticiasApiService _apiService = NoticiasApiService();
+  late Future<List<NewsArticle>> _futureNoticias;
+  final WorldNewsApiService _apiService = WorldNewsApiService();
 
   @override
   void initState() {
     super.initState();
-    _futureNoticias = _apiService.getNoticias(); // Cargar noticias al iniciar
+    _futureNoticias = _apiService.fetchTopHeadlines(); // Cargar noticias de Chile al iniciar
   }
 
   // Función para recargar las noticias
   Future<void> _refreshNoticias() async {
     setState(() {
-      _futureNoticias = _apiService.getNoticias();
+      _futureNoticias = _apiService.fetchTopHeadlines();
     });
   }
 
@@ -39,7 +39,7 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Noticia>>(
+      body: FutureBuilder<List<NewsArticle>>(
         future: _futureNoticias,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -52,7 +52,7 @@ class _FeedScreenState extends State<FeedScreen> {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                Noticia noticia = snapshot.data![index];
+                NewsArticle noticia = snapshot.data![index];
                 return Card(
                   margin: const EdgeInsets.all(8.0),
                   child: Padding(
@@ -61,7 +61,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          noticia.titulo,
+                          noticia.title,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -69,12 +69,12 @@ class _FeedScreenState extends State<FeedScreen> {
                         ),
                         const SizedBox(height: 8.0),
                         Text(
-                          noticia.descripcion,
+                          noticia.description ?? '',
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 8.0),
                         Text(
-                          'Publicado: ${noticia.fechaPublicacion.day}/${noticia.fechaPublicacion.month}/${noticia.fechaPublicacion.year}',
+                          'Publicado: ${noticia.publishedAt.day}/${noticia.publishedAt.month}/${noticia.publishedAt.year}',
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -89,32 +89,7 @@ class _FeedScreenState extends State<FeedScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Ejemplo de cómo crear una nueva noticia
-          // En una app real, esto sería un formulario de entrada
-          final newNoticia = Noticia(
-            id: 0, // El ID será asignado por el backend
-            titulo: 'Nueva Noticia desde Flutter ${DateTime.now().second}',
-            descripcion: 'Esta es una noticia creada desde la app Flutter.',
-            fechaPublicacion: DateTime.now(),
-            actualizadoEn: DateTime.now(),
-          );
-
-          try {
-            await _apiService.createNoticia(newNoticia);
-            _refreshNoticias(); // Recargar la lista para ver la nueva noticia
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Noticia creada con éxito!')),
-            );
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error al crear noticia: $e')),
-            );
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      // Se eliminó la acción de crear noticias ya que las noticias se obtienen de un servicio externo
     );
   }
 }
