@@ -37,6 +37,13 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
+# Serializer for reading user profile data without password
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+        read_only_fields = fields
+
 # --- Serializers for Existing Models ---
 
 class TipoEleccionSerializer(serializers.ModelSerializer):

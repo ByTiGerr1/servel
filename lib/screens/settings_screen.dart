@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
-
-class SettingsScreen extends StatelessWidget {
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:servel/screens/personal_data_screen.dart';
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  String _username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    final storedName = await _storage.read(key: 'username');
+    if (mounted) {
+      setState(() {
+        _username = storedName ?? '';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +55,12 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Antonio Mas',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      _username.isNotEmpty ? _username : 'Usuario',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                   ],
                 ),
               ],
@@ -47,7 +71,18 @@ class SettingsScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black54),
             ),
             const SizedBox(height: 8),
-            _buildSettingTile(Icons.person_outline, 'Detalles Personales'),
+            _buildSettingTile(
+              Icons.person_outline,
+              'Detalles Personales',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PersonalDataScreen(),
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 24),
             const Text(
               'CONFIGURACION',
@@ -92,7 +127,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingTile(IconData icon, String title) {
+  Widget _buildSettingTile(IconData icon, String title, {VoidCallback? onTap}) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -100,7 +135,7 @@ class SettingsScreen extends StatelessWidget {
         leading: Icon(icon, color: Colors.black54),
         title: Text(title),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }

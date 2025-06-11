@@ -19,7 +19,7 @@ from .models import (
     CandidatoDescartado, MatchCandidato, Noticia
 )
 from .serializers import (
-    UserSerializer, TipoEleccionSerializer, CandidatoSerializer,
+    UserSerializer, UserProfileSerializer, TipoEleccionSerializer, CandidatoSerializer,
     PreguntaSerializer, RespuestaUsuarioCreateSerializer, MatchCandidatoResultSerializer,
     CandidatoFavoritoSerializer, CandidatoDescartadoSerializer, NoticiaSerializer
 )
@@ -48,6 +48,14 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+
+# View to retrieve current user's profile
+class UserDetailView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 # --- Vistas para Listar Tipos de Elección y Candidatos ---
 
