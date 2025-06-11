@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:servel/screens/personal_data_screen.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'Configuración',
+          'Account Settings',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
-                  ]
+                  ],
                 ),
               ],
             ),
@@ -71,7 +71,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black54),
             ),
             const SizedBox(height: 8),
-            _buildSettingTile(Icons.person_outline, 'Detalles Personales'),
+            _buildSettingTile(
+              Icons.person_outline,
+              'Detalles Personales',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PersonalDataScreen(),
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 24),
             const Text(
               'CONFIGURACION',
@@ -116,7 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSettingTile(IconData icon, String title) {
+  Widget _buildSettingTile(IconData icon, String title, {VoidCallback? onTap}) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -124,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: Icon(icon, color: Colors.black54),
         title: Text(title),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }

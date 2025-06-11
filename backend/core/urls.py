@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RegisterUserView, CustomAuthToken, NoticiaDetailView, NoticiaListCreateView, TipoEleccionListView, CandidatoListView, CandidatoDetailView, PreguntasPendientesView, MatchCandidatoViewSet, CandidatoFavoritoViewSet,CandidatoDescartadoViewSet, SubmitUserAnswersView
+from .views import RegisterUserView, CustomAuthToken, UserDetailView, NoticiaDetailView, NoticiaListCreateView, TipoEleccionListView, CandidatoListView, CandidatoDetailView, PreguntasPendientesView, MatchCandidatoViewSet, CandidatoFavoritoViewSet,CandidatoDescartadoViewSet, SubmitUserAnswersView
 
 router = DefaultRouter()
 router.register(r'candidatos-favoritos', CandidatoFavoritoViewSet, basename='candidato-favorito')
@@ -10,7 +10,7 @@ router.register(r'descartados', CandidatoDescartadoViewSet, basename='descartado
 urlpatterns = [
     path('register/', RegisterUserView.as_view(), name='register'),
     path('login/', CustomAuthToken.as_view(), name='login'),
-
+    path('me/', UserDetailView.as_view(), name='user-detail'),
     path('tipos-eleccion/', TipoEleccionListView.as_view(), name='tipos-eleccion-list'),
     path('candidatos/', CandidatoListView.as_view(), name='candidato-list'),
     path('candidatos/<int:pk>/', CandidatoDetailView.as_view(), name='candidato-detail'),
