@@ -79,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final String token = responseData['token'];
 
         await _storage.write(key: 'auth_token', value: token);
+        await _storage.write(key: 'username', value: username);
         print('DEBUG: Token guardado en FlutterSecureStorage: $token');
 
         _showSnackBar('¡Login exitoso. Bienvenido!');

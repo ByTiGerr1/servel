@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Guardar el token de autenticación para futuras peticiones
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
-
+        await prefs.setString('username', username);
         _showSnackBar('Registro exitoso. ¡Bienvenido!');
         Navigator.pushReplacementNamed(context, '/login'); 
       } else {

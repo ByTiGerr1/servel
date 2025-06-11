@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
 
-class SettingsScreen extends StatelessWidget {
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  String _username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    final storedName = await _storage.read(key: 'username');
+    if (mounted) {
+      setState(() {
+        _username = storedName ?? '';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +55,13 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Antonio Mas',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      _username.isNotEmpty ? _username : 'Usuario',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 4),
-                  ],
+                    const SizedBox(height: 4),
+                  ]
                 ),
               ],
             ),
