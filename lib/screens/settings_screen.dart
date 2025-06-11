@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'Account Settings',
+          'Configuración',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
