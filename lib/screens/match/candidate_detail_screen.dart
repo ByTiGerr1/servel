@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:servel/models/candidato_model.dart';
 import 'package:servel/services/candidate_service.dart';
 import 'package:servel/widgets/widget_progress.dart';
+import 'package:tcard/tcard.dart';
 
 class CandidateDetailScreen extends StatefulWidget {
   final int candidatoId;
-
-  const CandidateDetailScreen({super.key, required this.candidatoId});
+  final TCardController controller;
+  const CandidateDetailScreen({super.key, required this.candidatoId, required this.controller});
 
   @override
   State<CandidateDetailScreen> createState() => _CandidateDetailScreenState();
@@ -78,12 +79,14 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
         // Si no es favorito, lo agregamos
         await _candidateService.addFavorito(widget.candidatoId);
         // Volvemos a obtener el ID del favorito recién creado
-        await _fetchCandidateDetailsAndStatus(); // Refresca para obtener el nuevo _favoritoId
+        await _fetchCandidateDetailsAndStatus();
+         // Refresca para obtener el nuevo _favoritoId
         setState(() {
           _isFavorited = true; // No es estrictamente necesario, _fetchCandidateDetailsAndStatus lo hará
         });
         _showSnackBar('Candidato agregado a favoritos.', Colors.green);
-
+        widget.controller.forward();
+        Navigator.pop(context);
         // Si estaba descartado, lo quitamos de descartados
         if (_isDiscarded && _descartadoId != null) {
           await _candidateService.removeDescartado(_descartadoId!);

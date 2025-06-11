@@ -50,19 +50,13 @@ class MatchLaunchScreen extends StatelessWidget {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String? token = prefs.getString('auth_token');
 
-                  if (token != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MatchResultScreen(tipoEleccionId: 1),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Debes iniciar sesión')),
-                    );
-                  }
-                }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MatchResultScreen(tipoEleccionId: 1),
+                    ),
+                  );
+                                }
 ,),
               ),
               Container(
@@ -77,7 +71,7 @@ class MatchLaunchScreen extends StatelessWidget {
     );
   }
 
-  // Función para construir imagen con estilo
+  // 🔧 Función para construir imagen con estilo
   Widget _buildImageCard(String imagePath) {
     return Container(
       width: 150.w,

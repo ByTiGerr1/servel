@@ -1,3 +1,4 @@
+// lib/services/candidate_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; 
@@ -32,7 +33,7 @@ class CandidateService {
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
       return body.map((dynamic item) => TipoEleccion.fromJson(item as Map<String, dynamic>)).toList();
     } else if (response.statusCode == 401) {
-      // Manejo de error de autorización. 
+      // Manejo de error de autorización. Podrías redirigir al login aquí.
       throw Exception('No autorizado. Por favor, inicie sesión de nuevo.');
     } else {
       throw Exception('Fallo al cargar tipos de elección: ${response.statusCode}');
@@ -111,6 +112,7 @@ class CandidateService {
     );
 
     if (response.statusCode == 200) {
+      print('DEBUG: JSON de match-candidatos recibido: ${response.body}');
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
       return body.map((dynamic item) => MatchResult.fromJson(item as Map<String, dynamic>)).toList();
     } else if (response.statusCode == 401) {
@@ -139,20 +141,24 @@ class CandidateService {
 
   Future<void> addFavorito(int candidatoId) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/favoritos/'),
+      Uri.parse('$_baseUrl/candidatos-favoritos/'),
       headers: await _getHeaders(),
       body: json.encode({'candidato': candidatoId}),
     );
 
-    if (response.statusCode != 201) {
-      final errorBody = json.decode(utf8.decode(response.bodyBytes));
-      throw Exception('Fallo al agregar favorito: ${response.statusCode} - $errorBody');
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    // éxito
+      print("Candidato agregado a favoritos correctamente.");
+    } else {
+        print("Error al agregar favorito. Código: ${response.statusCode}");
+        print("Respuesta: ${response.body}");
+      throw Exception("Error al agregar favorito");
     }
   }
 
   Future<void> removeFavorito(int favoritoId) async {
     final response = await http.delete(
-      Uri.parse('$_baseUrl/favoritos/$favoritoId/'),
+      Uri.parse('$_baseUrl/candidatos-favoritos/$favoritoId/'),
       headers: await _getHeaders(),
     );
 

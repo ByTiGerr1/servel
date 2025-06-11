@@ -142,7 +142,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CandidateDetailScreen(candidatoId: candidato.id),
+          builder: (context) => CandidateDetailScreen(candidatoId: candidato.id, controller: _controller),
         ),
       );
     },
