@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:servel/screens/feed/home_screen.dart';
+import 'package:servel/screens/home/home_screen.dart';
 import 'package:servel/screens/onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

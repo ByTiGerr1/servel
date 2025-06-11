@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:servel/screens/registro/phone_numer_field.dart';
+import 'package:servel/widgets/phone_numer_field.dart';
 import 'package:servel/screens/auth/login_screen.dart';
 import 'package:servel/screens/registro/validacion_codigo_numero_screen.dart';
 
@@ -105,7 +105,7 @@ class _RegistroOpcionNumeroState extends State<RegistroOpcionNumero> {
                 child: 
                   ElevatedButton(onPressed: () {
                     Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ValidacionCodigoNumero())
+                    MaterialPageRoute(builder: (context) => ValidacionCodigoNumeroScreen())
                     );
                   },
                   style: ElevatedButton.styleFrom(

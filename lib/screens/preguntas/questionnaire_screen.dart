@@ -9,7 +9,7 @@ import 'package:servel/widgets/secondary_button.dart';
 import 'package:servel/widgets/widget_progress.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
-  final int tipoEleccionId; // Por ejemplo, 1 para Presidencial
+  final int tipoEleccionId; 
   final String tipoEleccionNombre;
 
   const QuestionnaireScreen({
@@ -24,7 +24,7 @@ class QuestionnaireScreen extends StatefulWidget {
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   late Future<List<Pregunta>> _questionsFuture;
-  final Map<int, int> _userSelections = {}; // {preguntaId: opcionElegidaId}
+  final Map<int, int> _userSelections = {}; 
   int _currentQuestionIndex = 0;
   List<Pregunta> _allQuestions = []; // Para almacenar todas las preguntas una vez cargadas
 
@@ -37,8 +37,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     _questionsFuture.then((questions) {
       setState(() {
         _allQuestions = questions;
-        // Preseleccionar respuestas si ya existen (útil si el usuario vuelve)
-        // Esto requeriría una lógica adicional para cargar respuestas guardadas
+        // Preseleccionar respuestas si ya existen
         // por ahora, simplemente carga las preguntas pendientes.
       });
     }).catchError((error) {
@@ -82,7 +81,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       });
     } else {
       // Si estamos en la primera pregunta, podemos salir o hacer otra acción
-      Navigator.pop(context); // O una alerta para confirmar salida
+      Navigator.pop(context); 
     }
   }
 
@@ -116,7 +115,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   @override
   Widget build(BuildContext context) {
     // Inicializar ScreenUtil para el diseño responsivo
-    // Generalmente se hace en main.dart, pero si no, puedes hacerlo aquí con un Builder
     // Si ya lo haces en main.dart, puedes remover esta línea.
     // ScreenUtil.init(context, designSize: const Size(360, 690)); // Ajusta al tamaño de diseño que uses
 

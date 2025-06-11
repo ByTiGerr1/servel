@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:servel/screens/feed/home_screen.dart';
+import 'package:servel/screens/home/home_screen.dart';
 import 'package:servel/screens/auth/login_screen.dart';
 import 'package:servel/screens/launcher_screen.dart';
 import 'package:servel/screens/match/match_over_screen.dart';

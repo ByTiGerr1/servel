@@ -1,5 +1,3 @@
-// services/questionnaire_service.dart
-
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Para almacenar el token
 import 'package:servel/models/questionn_models.dart';
@@ -7,12 +5,12 @@ import 'package:servel/models/questionn_models.dart';
 class QuestionnaireService {
   final Dio _dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final String _baseUrl = "http://10.0.2.2:8000/api/"; // Cambia a la IP de tu backend si no usas emulador
+  final String _baseUrl = "http://10.0.2.2:8000/api/"; 
 
   QuestionnaireService() : _dio = Dio() {
     _dio.options.baseUrl = _baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 5); // 5 segundos
-    _dio.options.receiveTimeout = const Duration(seconds: 3); // 3 segundos
+    _dio.options.connectTimeout = const Duration(seconds: 5); 
+    _dio.options.receiveTimeout = const Duration(seconds: 3);
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

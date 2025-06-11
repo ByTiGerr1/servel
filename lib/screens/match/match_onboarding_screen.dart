@@ -77,7 +77,7 @@ class MatchLaunchScreen extends StatelessWidget {
     );
   }
 
-  // 🔧 Función para construir imagen con estilo
+  // Función para construir imagen con estilo
   Widget _buildImageCard(String imagePath) {
     return Container(
       width: 150.w,
