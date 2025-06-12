@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Importa shared_preferences
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,6 +17,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Clave para validar el formulario
 
   bool _isLoading = false; // Estado para mostrar un indicador de carga
+
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   final String _baseUrl = 'http://10.0.2.2:8000/api'; 
 
@@ -68,10 +70,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String token = responseData['token'];
 
-        // Guardar el token de autenticación para futuras peticiones
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('auth_token', token);
-        await prefs.setString('username', username);
+        // Guardar el token de autenticación de forma segura
+        await _storage.write(key: 'auth_token', value: token);
+        await _storage.write(key: 'username', value: username);
         _showSnackBar('Registro exitoso. ¡Bienvenido!');
         Navigator.pushReplacementNamed(context, '/login'); 
       } else {

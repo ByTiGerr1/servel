@@ -29,7 +29,17 @@ from .serializers import (
 class RegisterUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny] # Permitir registro sin autenticación
+    permission_classes = [permissions.AllowAny]  # Permitir registro sin autenticación
+
+    def create(self, request, *args, **kwargs):
+        """Create a new user and return an auth token in the response."""
+        response = super().create(request, *args, **kwargs)
+        user_id = response.data.get('id')
+        if user_id is not None:
+            user = User.objects.get(id=user_id)
+            token, _ = Token.objects.get_or_create(user=user)
+            response.data['token'] = token.key
+        return response
 
 class CustomAuthToken(ObtainAuthToken):
     """

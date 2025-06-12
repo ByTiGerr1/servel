@@ -7,7 +7,6 @@ class WorldNewsApiService {
   final String _baseUrl = AppConfig.worldNewsApiBaseUrl;
   final String _apiKey = AppConfig.worldNewsApiKey;
 
-  /// Fetches Spanish political news from Chile using WorldNewsAPI.
   Future<List<NewsArticle>> fetchTopHeadlines() async {
     final url = Uri.parse(
         '$_baseUrl/search-news?text=chile%20politica&language=es&source-countries=cl&api-key=$_apiKey');
