@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Para almacenar el token
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; 
 import 'package:servel/models/questionn_models.dart';
 
 class QuestionnaireService {
@@ -26,7 +26,6 @@ class QuestionnaireService {
           return handler.next(options);
         },
         onError: (DioException e, handler) {
-          // Manejo de errores global
           print('Error en petición: ${e.response?.statusCode} - ${e.message}');
           if (e.response?.statusCode == 401) {
             print('DEBUG: Error 401: Credenciales de autenticación no proporcionadas o inválidas.');
@@ -37,7 +36,6 @@ class QuestionnaireService {
     );
   }
 
-  // Método para obtener las preguntas pendientes
   Future<List<Pregunta>> getPendingQuestions({required int tipoEleccionId}) async {
     try {
       final response = await _dio.get(
@@ -63,7 +61,6 @@ class QuestionnaireService {
     }
   }
 
-  // Método para enviar las respuestas del usuario
   Future<void> submitUserAnswers(List<UserAnswer> answers) async {
     try {
       final List<Map<String, dynamic>> answersJson =
@@ -71,7 +68,7 @@ class QuestionnaireService {
 
       final response = await _dio.post(
         'respuestas/',
-        data: answersJson, // Enviamos la lista de respuestas
+        data: answersJson, 
       );
 
       if (response.statusCode == 201) {
@@ -92,7 +89,6 @@ class QuestionnaireService {
     }
   }
 
-  // Método para obtener los resultados del matching
   Future<List<Map<String, dynamic>>> getMatchResults({required int tipoEleccionId}) async {
     try {
       final response = await _dio.get(
@@ -101,7 +97,7 @@ class QuestionnaireService {
       );
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        return List<Map<String, dynamic>>.from(data); // El serializador ya devuelve Map<String, dynamic>
+        return List<Map<String, dynamic>>.from(data); 
       } else {
         throw Exception('Failed to load match results: ${response.statusCode}');
       }

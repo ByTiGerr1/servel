@@ -37,7 +37,6 @@ class _LauncherScreenState extends State<LauncherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Puedes poner un splash temporal mientras redirige
     return const Scaffold(
       body: Center(child: CircularProgressIndicator()),
     );

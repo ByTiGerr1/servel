@@ -18,10 +18,9 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    _futureNoticias = _apiService.fetchTopHeadlines(); // Cargar noticias de Chile al iniciar
+    _futureNoticias = _apiService.fetchTopHeadlines();
   }
 
-  // Función para recargar las noticias
   Future<void> _refreshNoticias() async {
     setState(() {
       _futureNoticias = _apiService.fetchTopHeadlines();
@@ -37,7 +36,7 @@ class _FeedScreenState extends State<FeedScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _refreshNoticias, // Botón para recargar
+            onPressed: _refreshNoticias, 
           ),
         ],
       ),
@@ -114,7 +113,6 @@ class _FeedScreenState extends State<FeedScreen> {
           }
         },
       ),
-      // Se eliminó la acción de crear noticias ya que las noticias se obtienen de un servicio externo
     );
   }
 }

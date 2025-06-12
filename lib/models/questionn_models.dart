@@ -1,4 +1,3 @@
-// Modelo para OpcionRespuesta
 class OpcionRespuesta {
   final int id;
   final String texto;
@@ -27,13 +26,13 @@ class OpcionRespuesta {
   }
 }
 
-// Modelo para Pregunta
+
 class Pregunta {
   final int id;
   final String texto;
   final int orden;
   final int tipoEleccion;
-  final String tipoEleccionNombre; // Añadido para el nombre legible
+  final String tipoEleccionNombre; 
   final List<OpcionRespuesta> opcionesRespuesta;
 
   Pregunta({
@@ -72,7 +71,7 @@ class Pregunta {
   }
 }
 
-// Modelo para la respuesta del usuario a una pregunta (para enviar al backend)
+
 class UserAnswer {
   final int preguntaID;
   final int opcionElegidaID;

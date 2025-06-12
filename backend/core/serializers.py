@@ -20,7 +20,6 @@ from decimal import Decimal
 
 User = get_user_model()
 
-# --- Authentication and Registration Serializers ---
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -43,7 +42,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
         read_only_fields = fields
 
-# --- Serializers for Existing Models ---
 
 class TipoEleccionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,21 +78,17 @@ class CandidatoSerializer(serializers.ModelSerializer):
         print(f"DEBUG: Tipo de 'obj' recibido: {type(obj)}")
         print(f"DEBUG: Contenido de 'obj': {obj}")
         
-        # --- CAMBIO CRUCIAL AQUÍ ---
-        if isinstance(obj, dict):
-            # Si 'obj' ya es un diccionario (ReturnDict), significa que los datos ya fueron serializados.
-            # Intentamos obtener 'tipos_eleccion' directamente del diccionario.
-            return obj.get('tipos_eleccion', []) # Asumiendo que contendrá una lista de IDs
-        # --- FIN DEL CAMBIO ---
 
-        # Este es el caso normal cuando 'obj' es una instancia del modelo Candidato
+        if isinstance(obj, dict):
+            return obj.get('tipos_eleccion', [])
+
         return [te.id for te in obj.tipos_eleccion.all()]
 
     def get_tipos_eleccion_nombres(self, obj):
-        # --- CAMBIO CRUCIAL AQUÍ ---
+       
         if isinstance(obj, dict):
-            return obj.get('tipos_eleccion_nombres', []) # Asumiendo que contendrá una lista de nombres
-        # --- FIN DEL CAMBIO ---
+            return obj.get('tipos_eleccion_nombres', []) 
+       
         return [te.nombre for te in obj.tipos_eleccion.all()]
 
 
@@ -116,14 +110,13 @@ class PosturaCandidatoSerializer(serializers.ModelSerializer):
     def get_candidato_nombre_completo(self, obj):
         return f"{obj.candidato.nombre} {obj.candidato.apellido}".strip()
 
-# Serializer for match results
+
 class MatchCandidatoResultSerializer(serializers.ModelSerializer):
-    # Descomentamos este campo para incluir los datos completos del candidato
+    
     candidato_data = CandidatoSerializer(source='candidato', read_only=True)
 
     user = serializers.StringRelatedField(read_only=True)
-    # Comentamos 'candidato' para evitar duplicidad, ya que 'candidato_data' lo cubre.
-    # candidato = serializers.StringRelatedField(read_only=True)
+
 
     match_percentage = serializers.DecimalField(
         source='match_percentage_value',
@@ -139,13 +132,11 @@ class MatchCandidatoResultSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
-            # 'candidato', # Omitimos este campo
-            'candidato_data', # Incluimos los datos completos del candidato
+            'candidato_data', 
             'match_percentage',
             'preguntas_consideradas'
         ]
-        # Puedes omitir read_only_fields si todos ya son de solo lectura por su tipo o definición
-        # read_only_fields = ['id', 'user', 'candidato_data', 'match_percentage', 'preguntas_consideradas']
+
 
 
 class CandidatoFavoritoSerializer(serializers.ModelSerializer):
@@ -170,7 +161,7 @@ class CandidatoDescartadoSerializer(serializers.ModelSerializer):
         fields = ['id', 'candidato', 'fecha_descartado', 'candidato_data']
         read_only_fields = ['fecha_descartado', 'candidato_data']
 
-# Specific serializer for creating/updating RespuestaUsuario from Flutter
+
 class RespuestaUsuarioCreateSerializer(serializers.ModelSerializer):
     pregunta = serializers.PrimaryKeyRelatedField(queryset=Pregunta.objects.all())
     opcion_elegida = serializers.PrimaryKeyRelatedField(queryset=OpcionRespuesta.objects.all())
@@ -189,7 +180,7 @@ class RespuestaUsuarioCreateSerializer(serializers.ModelSerializer):
             )
         return data
 
-# Serializer for reading RespuestaUsuario (if you need to return a user's responses)
+
 class RespuestaUsuarioReadSerializer(serializers.ModelSerializer):
     pregunta_texto = serializers.CharField(source='pregunta.texto', read_only=True)
     opcion_elegida_texto = serializers.CharField(source='opcion_elegida.texto', read_only=True)

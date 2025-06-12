@@ -113,7 +113,7 @@ class PreguntasPendientesView(APIView):
             pregunta__tipo_eleccion=tipo_eleccion
         ).values_list('pregunta__id', flat=True)
 
-        # Preguntas pendientes (excluyendo las ya respondidas)
+        # Preguntas pendientes 
         pending_questions = Pregunta.objects.filter(
             tipo_eleccion=tipo_eleccion
         ).exclude(
@@ -165,7 +165,7 @@ class SubmitUserAnswersView(APIView):
 # --- Vista para el Match de Candidatos ---
 class MatchCandidatoViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    # No es necesario definir serializer_class aquí si lo vas a usar explícitamente en el action
+
 
     @action(detail=False, methods=['get'])
     def match_candidatos(self, request):
@@ -180,43 +180,41 @@ class MatchCandidatoViewSet(viewsets.GenericViewSet):
         except TipoEleccion.DoesNotExist:
             return Response({"detail": "Tipo de elección no encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Obtener las respuestas del usuario para el tipo de elección
+    
         respuestas_usuario = RespuestaUsuario.objects.filter(
             user=user,
             pregunta__tipo_eleccion=tipo_eleccion
         ).select_related('opcion_elegida', 'pregunta')
 
-        # Si el usuario no ha respondido preguntas para este tipo de elección, no se puede hacer match
+     
         if not respuestas_usuario.exists():
             return Response({"detail": "El usuario no ha respondido preguntas para este tipo de elección."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # Mapear respuestas del usuario por ID de pregunta
+    
         user_responses_map = {
             respuesta.pregunta.id: respuesta.opcion_elegida.valor
             for respuesta in respuestas_usuario
         }
         num_preguntas_usuario_respondidas = len(user_responses_map)
 
-        # Obtener candidatos para el tipo de elección
-        # Prefetch las posturas de los candidatos para evitar N+1 queries
+
         candidatos = Candidato.objects.filter(
             tipos_eleccion=tipo_eleccion
         ).prefetch_related(
             Prefetch('posturas_candidato', queryset=PosturaCandidato.objects.select_related('pregunta', 'opcion_respuesta'))
         )
 
-        match_results = [] # Lista para almacenar los objetos MatchCandidato
+        match_results = [] 
 
         for candidato in candidatos:
-            # Obtener o crear el objeto MatchCandidato
+     
             match_candidato, created = MatchCandidato.objects.get_or_create(
                 user=user,
                 candidato=candidato
             )
 
-            # Calcular el porcentaje de match y el número de preguntas consideradas
-            # Aquí va tu lógica de cálculo
+
             total_match_score = 0
             considered_questions_count = 0
 
@@ -225,42 +223,35 @@ class MatchCandidatoViewSet(viewsets.GenericViewSet):
                     user_value = user_responses_map[postura.pregunta.id]
                     candidate_value = postura.opcion_respuesta.valor
 
-                    # Aquí tu lógica de match. Ejemplo simple: valor absoluto de la diferencia
-                    # Puedes ajustar esto a tu fórmula de matching real.
+
                     diff = abs(user_value - candidate_value)
-                    # Normaliza la diferencia (ejemplo: si los valores van de 1 a 5, max_diff es 4)
-                    # score = 1 - (diff / max_possible_difference)
-                    # Si tus valores de opción son 1 a 5, max_diff = 4
-                    max_possible_difference = 4 # Asume que los valores de opción son 1, 2, 3, 4, 5
+
+                    max_possible_difference = 4 
                     score = 1 - (Decimal(diff) / Decimal(max_possible_difference))
                     total_match_score += score
                     considered_questions_count += 1
 
-            # Evitar división por cero
+    
             if considered_questions_count > 0:
                 match_percentage = (total_match_score / Decimal(considered_questions_count)) * 100
-                # Redondear a dos decimales
+              
                 match_percentage = match_percentage.quantize(Decimal('0.01'))
             else:
                 match_percentage = Decimal('0.00')
 
-            # Actualizar el objeto MatchCandidato con los valores calculados
             match_candidato.match_percentage_value = match_percentage
             match_candidato.num_preguntas_consideradas = considered_questions_count
-            match_candidato.save() # ¡IMPORTANTE! Guardar los cambios en la base de datos
+            match_candidato.save() 
 
             match_results.append(match_candidato)
 
-        # Ordenar por porcentaje de match de mayor a menor
         match_results.sort(key=lambda x: x.match_percentage_value, reverse=True)
 
-        # Usar el nuevo serializador para los resultados
-        # Ahora el serializer recibe una lista de objetos MatchCandidato
+
         serializer = MatchCandidatoResultSerializer(match_results, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# --- ViewSets para Favoritos y Descartados ---
-# Usamos un mixin para el método `perform_create` que ya tienes.
+
 class CandidatoFavoritoViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -271,7 +262,7 @@ class CandidatoFavoritoViewSet(
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Prefetch los datos del candidato para evitar N+1 queries al listar favoritos
+     
         return CandidatoFavorito.objects.filter(user=self.request.user).select_related('candidato')
 
     def perform_create(self, serializer):
@@ -288,7 +279,7 @@ class CandidatoDescartadoViewSet(
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Prefetch los datos del candidato para evitar N+1 queries al listar descartados
+ 
         return CandidatoDescartado.objects.filter(user=self.request.user).select_related('candidato')
 
     def perform_create(self, serializer):

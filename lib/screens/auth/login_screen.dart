@@ -1,10 +1,8 @@
-// lib/screens/auth/login_screen.dart (or where it's located)
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:servel/screens/preguntas/questionnaire_screen.dart';
 import 'dart:convert';
-// REMOVE: import 'package:shared_preferences/shared_preferences.dart'; // <--- REMOVE THIS
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // <--- ADD THIS
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,8 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final String _baseUrl = 'http://10.0.2.2:8000/api';
 
-  // Instantiate FlutterSecureStorage
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(); // <--- ADD THIS
+ 
+  final FlutterSecureStorage _storage = const FlutterSecureStorage(); 
 
   void _showSnackBar(String message, {bool isError = false}) {
     if (!mounted) return; 
@@ -39,22 +37,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginUser() async {
-    print('DEBUG: _loginUser() called'); // Nuevo: Inicio de la función
+    print('DEBUG: _loginUser() called'); 
     if (!_formKey.currentState!.validate()) {
-      print('DEBUG: Validation failed'); // Nuevo: Fallo de validación
+      print('DEBUG: Validation failed'); 
       return;
     }
 
     setState(() {
       _isLoading = true;
-      print('DEBUG: _isLoading set to true'); // Nuevo: Indicador de carga ON
+      print('DEBUG: _isLoading set to true'); 
     });
 
     final String username = _usernameController.text.trim();
     final String password = _passwordController.text;
 
     try {
-      print('DEBUG: Making HTTP POST request to $_baseUrl/login/'); // Nuevo: Antes de la petición
+      print('DEBUG: Making HTTP POST request to $_baseUrl/login/'); 
       final response = await http.post(
         Uri.parse('$_baseUrl/login/'),
         headers: <String, String>{
@@ -66,15 +64,15 @@ class _LoginScreenState extends State<LoginScreen> {
         }),
       );
 
-      print('DEBUG: HTTP response received. Status: ${response.statusCode}'); // Nuevo: Después de la respuesta
+      print('DEBUG: HTTP response received. Status: ${response.statusCode}'); 
 
       if (!mounted) {
-        print('DEBUG: Widget unmounted after response received. Returning.'); // Nuevo: Si el widget ya no está montado
+        print('DEBUG: Widget unmounted after response received. Returning.'); 
         return;
       }
 
       if (response.statusCode == 200) {
-        print('DEBUG: Login successful. Processing response data.'); // Nuevo: Login exitoso
+        print('DEBUG: Login successful. Processing response data.'); 
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String token = responseData['token'];
 
@@ -83,16 +81,16 @@ class _LoginScreenState extends State<LoginScreen> {
         print('DEBUG: Token guardado en FlutterSecureStorage: $token');
 
         _showSnackBar('¡Login exitoso. Bienvenido!');
-        print('DEBUG: Navigating to QuestionnaireScreen'); // Nuevo: Antes de navegar
+        print('DEBUG: Navigating to QuestionnaireScreen'); 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => QuestionnaireScreen(tipoEleccionId: 1, tipoEleccionNombre: 'Presidencial'),
           ),
         );
-        print('DEBUG: Navigation completed. LoginScreen is now unmounted.'); // Nuevo: Después de la navegación
+        print('DEBUG: Navigation completed. LoginScreen is now unmounted.'); 
       } else {
-        print('DEBUG: Login failed. Status: ${response.statusCode} - Body: ${response.body}'); // Nuevo: Login fallido
+        print('DEBUG: Login failed. Status: ${response.statusCode} - Body: ${response.body}'); 
         String errorMessage = 'Error al iniciar sesión.';
         try {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
@@ -109,17 +107,17 @@ class _LoginScreenState extends State<LoginScreen> {
         _showSnackBar(errorMessage, isError: true);
       }
     } catch (e) {
-      print('DEBUG: Exception caught during login: $e'); // Nuevo: Excepción capturada
+      print('DEBUG: Exception caught during login: $e'); 
       _showSnackBar('Error de conexión. Verifica tu conexión a internet.', isError: true);
     } finally {
-      print('DEBUG: Finally block entered.'); // Nuevo: Entrada al bloque finally
+      print('DEBUG: Finally block entered.'); 
       if (mounted) {
-        print('DEBUG: Widget is still mounted. Setting _isLoading to false.'); // Nuevo: Ocultando carga
+        print('DEBUG: Widget is still mounted. Setting _isLoading to false.'); 
         setState(() {
           _isLoading = false;
         });
       } else {
-        print('DEBUG: Widget is NOT mounted. _isLoading will not be set to false.'); // Nuevo: No se oculta carga
+        print('DEBUG: Widget is NOT mounted. _isLoading will not be set to false.'); 
       }
     }
   }
@@ -133,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ... (resto de tu código de build, no necesita cambios aquí) ...
+  
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(

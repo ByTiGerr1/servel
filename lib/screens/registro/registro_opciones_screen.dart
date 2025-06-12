@@ -65,7 +65,6 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Column(
             children: [
-              // Carousel horizontal con comentarios
               SizedBox(
                 height: 150.h,
                 child: ListView.builder(
@@ -123,7 +122,6 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
                   },
                 ),
               ),
-              // "Únete" texto
               Container(
                 margin: EdgeInsets.symmetric(vertical: 30.h),
                 child: Text(
@@ -133,7 +131,6 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
                 ),
               ),
 
-              // Botones de registro
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5.h),
                 width: double.infinity,
@@ -240,7 +237,6 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
 
               SizedBox(height: 50.h),
 
-              // Texto de condiciones
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Column(
@@ -252,7 +248,6 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Aquí puedes poner acción para abrir políticas
                       },
                       child: Text(
                         "Condiciones de uso y Políticas de privacidad",

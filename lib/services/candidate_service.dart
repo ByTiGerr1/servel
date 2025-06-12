@@ -9,20 +9,17 @@ import 'package:servel/models/tipo_eleccion_model.dart';
 class CandidateService {
   final String _baseUrl = 'http://10.0.2.2:8000/api'; 
 
-  // Instancia de FlutterSecureStorage
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  // Método para obtener los headers, incluyendo el token de autenticación
   Future<Map<String, String>> _getHeaders() async {
-    final token = await _storage.read(key: 'auth_token'); // Lee el token de forma segura
+    final token = await _storage.read(key: 'auth_token'); 
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      if (token != null) 'Authorization': 'Token $token', // Añade el token si existe
+      if (token != null) 'Authorization': 'Token $token', 
     };
   }
 
-  // --- Servicio para TipoEleccion ---
   Future<List<TipoEleccion>> getTiposEleccion() async {
     final response = await http.get(
       Uri.parse('$_baseUrl/tipos-eleccion/'),
@@ -33,14 +30,12 @@ class CandidateService {
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
       return body.map((dynamic item) => TipoEleccion.fromJson(item as Map<String, dynamic>)).toList();
     } else if (response.statusCode == 401) {
-      // Manejo de error de autorización. Podrías redirigir al login aquí.
       throw Exception('No autorizado. Por favor, inicie sesión de nuevo.');
     } else {
       throw Exception('Fallo al cargar tipos de elección: ${response.statusCode}');
     }
   }
 
-  // --- Servicio para Candidatos ---
   Future<List<Candidato>> getCandidatos() async {
     final response = await http.get(
       Uri.parse('$_baseUrl/candidatos/'),
@@ -72,7 +67,6 @@ class CandidateService {
     }
   }
 
-  // --- Servicios para Preguntas y Respuestas de Usuario ---
   Future<List<Pregunta>> getPreguntasPendientes(int tipoEleccionId) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/preguntas-pendientes/?tipo_eleccion_id=$tipoEleccionId'),
@@ -104,7 +98,6 @@ class CandidateService {
     }
   }
 
-  // --- Servicio para el Match de Candidatos ---
   Future<List<MatchResult>> getMatchCandidatos(int tipoEleccionId) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/match-candidatos/?tipo_eleccion_id=$tipoEleccionId'),
@@ -122,7 +115,6 @@ class CandidateService {
     }
   }
 
-  // --- Servicios para Favoritos ---
   Future<List<CandidatoFavorito>> getFavoritos() async {
     final response = await http.get(
       Uri.parse('$_baseUrl/candidatos-favoritos/'),
@@ -147,7 +139,6 @@ class CandidateService {
     );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    // éxito
       print("Candidato agregado a favoritos correctamente.");
     } else {
         print("Error al agregar favorito. Código: ${response.statusCode}");
@@ -167,7 +158,6 @@ class CandidateService {
     }
   }
 
-  // --- Servicios para Descartados ---
   Future<List<CandidatoDescartado>> getDescartados() async {
     final response = await http.get(
       Uri.parse('$_baseUrl/descartados/'),
@@ -208,7 +198,6 @@ class CandidateService {
     }
   }
 
-  // --- Servicios para DecisionFinal ---
   Future<DecisionFinal> submitDecisionFinal(int candidatoElegidoId, int tipoEleccionId) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/decisiones-finales/'),

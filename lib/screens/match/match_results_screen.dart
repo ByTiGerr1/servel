@@ -30,9 +30,21 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
   }
 
   void _fetchMatchResults() {
-    setState(() {
-      _matchResultsFuture = _candidateService.getMatchCandidatos(widget.tipoEleccionId);
-    });
+    _matchResultsFuture = _loadMatchResults();
+  }
+
+  Future<List<MatchResult>> _loadMatchResults() async {
+    final results = await _candidateService.getMatchCandidatos(widget.tipoEleccionId);
+    final favoritos = await _candidateService.getFavoritos();
+    final favoriteIds = favoritos.map((f) => f.candidatoId).toSet();
+
+    return results
+        .where((result) {
+          final candidato = result.candidato;
+          if (candidato == null) return false;
+          return !favoriteIds.contains(candidato.id);
+        })
+        .toList();
   }
 
   @override

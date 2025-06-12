@@ -11,49 +11,47 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _usernameController = TextEditingController(); // Usar _ para indicar que son privadas
+  final TextEditingController _usernameController = TextEditingController(); 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Clave para validar el formulario
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); 
 
-  bool _isLoading = false; // Estado para mostrar un indicador de carga
+  bool _isLoading = false; 
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   final String _baseUrl = 'http://10.0.2.2:8000/api'; 
 
-  // Función para mostrar SnackBar
   void _showSnackBar(String message, {bool isError = false}) {
-    if (!mounted) return; // Asegurarse de que el widget sigue montado
+    if (!mounted) return; 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: isError ? Colors.red.shade700 : Colors.green.shade700,
-        behavior: SnackBarBehavior.floating, // Hace que la SnackBar flote
-        margin: const EdgeInsets.all(10), // Añade margen
+        behavior: SnackBarBehavior.floating, 
+        margin: const EdgeInsets.all(10), 
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
 
-  // Lógica principal de registro
+
   Future<void> _registerUser() async {
-    // 1. Validar el formulario antes de hacer la petición
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
     setState(() {
-      _isLoading = true; // Mostrar indicador de carga
+      _isLoading = true; 
     });
 
-    final String username = _usernameController.text.trim(); // .trim() para eliminar espacios en blanco
+    final String username = _usernameController.text.trim(); 
     final String email = _emailController.text.trim();
     final String password = _passwordController.text;
 
     try {
       final response = await http.post(
-        Uri.parse('$_baseUrl/register/'), // Endpoint de registro
+        Uri.parse('$_baseUrl/register/'), 
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -64,23 +62,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }),
       );
 
-      if (!mounted) return; // Verificar si el widget sigue montado después de la operación async
+      if (!mounted) return; 
 
-      if (response.statusCode == 201) { // 201 Created: Registro exitoso
+      if (response.statusCode == 201) { 
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String token = responseData['token'];
 
-        // Guardar el token de autenticación de forma segura
+       
         await _storage.write(key: 'auth_token', value: token);
         await _storage.write(key: 'username', value: username);
         _showSnackBar('Registro exitoso. ¡Bienvenido!');
         Navigator.pushReplacementNamed(context, '/login'); 
       } else {
-        // Manejar errores de la API de Django (ej., usuario ya existe, validación)
         String errorMessage = 'Error al registrar usuario.';
         try {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
-          // Puedes iterar sobre los errores o acceder a campos específicos
           if (errorData.containsKey('username')) {
             errorMessage += '\nUsuario: ${errorData['username'][0]}';
           }
@@ -90,24 +86,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if (errorData.containsKey('password')) {
             errorMessage += '\nContraseña: ${errorData['password'][0]}';
           }
-          // Para errores que no sean específicos de un campo (ej., 'non_field_errors')
           if (errorData.containsKey('non_field_errors')) {
             errorMessage += '\n${errorData['non_field_errors'][0]}';
           }
         } catch (e) {
-          // Si la respuesta no es un JSON válido o no tiene los campos esperados
           print('Respuesta de error no JSON o inesperada: ${response.body}');
           errorMessage += '\nDetalles: ${response.body}';
         }
         _showSnackBar(errorMessage, isError: true);
-        print('Registro fallido: ${response.statusCode} - ${response.body}'); // Para depuración
+        print('Registro fallido: ${response.statusCode} - ${response.body}'); 
       }
     } catch (e) {
-      // Manejar errores de red o excepciones generales (ej. sin internet)
       _showSnackBar('Error de conexión. Verifica tu conexión a internet.', isError: true);
     } finally {
       setState(() {
-        _isLoading = false; // Ocultar indicador de carga
+        _isLoading = false; 
       });
     }
   }
@@ -126,11 +119,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form( // Usamos Form para la validación
+          child: Form( 
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch, // Estirar los widgets horizontalmente
+              crossAxisAlignment: CrossAxisAlignment.stretch, 
               children: [
                 const Text(
                   'Crea tu cuenta',
@@ -202,11 +195,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 30),
                 _isLoading
-                    ? const Center(child: CircularProgressIndicator()) // Centrar el indicador
+                    ? const Center(child: CircularProgressIndicator()) 
                     : ElevatedButton(
-                        onPressed: _registerUser, // Llamar a la nueva función
+                        onPressed: _registerUser,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xffe2000d), // Color de fondo del botón
+                          backgroundColor: Color(0xffe2000d), 
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

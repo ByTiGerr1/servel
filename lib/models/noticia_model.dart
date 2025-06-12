@@ -14,7 +14,7 @@ class Noticia {
     required this.actualizadoEn,
   });
 
-  // Constructor de factory para crear una instancia de Noticia desde un mapa JSON
+
   factory Noticia.fromJson(Map<String, dynamic> json) {
     return Noticia(
       id: json['id'],
@@ -25,7 +25,6 @@ class Noticia {
     );
   }
 
-  // Método para convertir una instancia de Noticia a un mapa JSON (útil para POST/PUT)
   Map<String, dynamic> toJson() {
     return {
       'id': id,

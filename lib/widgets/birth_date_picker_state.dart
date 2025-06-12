@@ -8,11 +8,9 @@ class BirthDatePicker extends StatefulWidget {
 class _BirthDatePickerState extends State<BirthDatePicker> {
   TextEditingController _controller = TextEditingController();
 
-  // Función para seleccionar la fecha
   Future<void> _selectDate(BuildContext context) async {
     DateTime initialDate = DateTime.now();
 
-    // Mostrar el DatePicker
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -22,7 +20,7 @@ class _BirthDatePickerState extends State<BirthDatePicker> {
 
     if (picked != null) {
       setState(() {
-        _controller.text = "${picked.toLocal()}".split(' ')[0]; // yyyy-mm-dd
+        _controller.text = "${picked.toLocal()}".split(' ')[0]; 
       });
     }
   }
@@ -31,7 +29,7 @@ class _BirthDatePickerState extends State<BirthDatePicker> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _selectDate(context),
-      child: AbsorbPointer( // Evita que se edite manualmente
+      child: AbsorbPointer( 
         child: TextField(
           controller: _controller,
           decoration: InputDecoration(
@@ -39,7 +37,7 @@ class _BirthDatePickerState extends State<BirthDatePicker> {
             suffixIcon: Icon(Icons.calendar_today),
             border: OutlineInputBorder(),
           ),
-          readOnly: true, // Evita que se edite manualmente
+          readOnly: true, 
         ),
       ),
     );

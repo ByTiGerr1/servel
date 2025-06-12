@@ -17,7 +17,7 @@ class PhoneNumberField extends StatefulWidget {
 }
 
 class _PhoneNumberFieldState extends State<PhoneNumberField> {
-  Country _selectedCountry = CountryPickerUtils.getCountryByPhoneCode('51'); // Perú por defecto
+  Country _selectedCountry = CountryPickerUtils.getCountryByPhoneCode('51'); 
 
   @override
   Widget build(BuildContext context) {

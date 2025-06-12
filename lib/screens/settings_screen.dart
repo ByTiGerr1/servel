@@ -12,6 +12,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String _username = '';
 
+  Future<void> _logoutUser() async {
+    await _storage.delete(key: 'auth_token');
+    await _storage.delete(key: 'username');
+    if (!mounted) return;
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -94,7 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSettingTile(Icons.headphones_outlined, 'Ayuda y Soporte'),
             const SizedBox(height: 24),
             TextButton(
-              onPressed: () {},
+              onPressed: _logoutUser,
               child: const Text(
                 'Cerrar Sesion',
                 style: TextStyle(color: Colors.red),

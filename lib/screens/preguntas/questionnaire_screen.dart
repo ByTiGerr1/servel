@@ -26,7 +26,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   late Future<List<Pregunta>> _questionsFuture;
   final Map<int, int> _userSelections = {}; 
   int _currentQuestionIndex = 0;
-  List<Pregunta> _allQuestions = []; // Para almacenar todas las preguntas una vez cargadas
+  List<Pregunta> _allQuestions = []; 
 
   @override
   void initState() {
@@ -37,11 +37,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     _questionsFuture.then((questions) {
       setState(() {
         _allQuestions = questions;
-        // Preseleccionar respuestas si ya existen
-        // por ahora, simplemente carga las preguntas pendientes.
       });
     }).catchError((error) {
-      // Manejar el error de carga inicial
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al cargar preguntas: ${error.toString()}')),
       );
@@ -55,7 +52,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   }
 
   void _nextQuestion() {
-    // Validar que se haya seleccionado una opción para la pregunta actual
     final currentQuestion = _allQuestions[_currentQuestionIndex];
     if (!_userSelections.containsKey(currentQuestion.id)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +65,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         _currentQuestionIndex++;
       });
     } else {
-      // Última pregunta, enviar respuestas
       _submitAnswers();
     }
   }
@@ -80,7 +75,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         _currentQuestionIndex--;
       });
     } else {
-      // Si estamos en la primera pregunta, podemos salir o hacer otra acción
       Navigator.pop(context); 
     }
   }
@@ -98,7 +92,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Respuestas guardadas exitosamente!')),
       );
-      // Navegar a la pantalla de resultados después de guardar
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -114,9 +107,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Inicializar ScreenUtil para el diseño responsivo
-    // Si ya lo haces en main.dart, puedes remover esta línea.
-    // ScreenUtil.init(context, designSize: const Size(360, 690)); // Ajusta al tamaño de diseño que uses
 
     return Scaffold(
       appBar: AppBar(
@@ -132,13 +122,13 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                 children: [
                   SizedBox(height: 8.h),
                   buildProgressRow(
-                    total: _allQuestions.length, // Total de preguntas
-                    activeIndex: _currentQuestionIndex, // Pregunta actual
+                    total: _allQuestions.length, 
+                    activeIndex: _currentQuestionIndex, 
                   ),
                 ],
               );
             }
-            return const SizedBox.shrink(); // No muestra la barra si no hay datos
+            return const SizedBox.shrink(); 
           },
         ),
       ),
@@ -167,27 +157,26 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 8.h),
                     child: Text(
-                      currentQuestion.texto, // Texto de la pregunta del backend
+                      currentQuestion.texto, 
                       style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center, // Centrar el texto de la pregunta
+                      textAlign: TextAlign.center, 
                     ),
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 20.h),
                     child: Text(
-                      "Selecciona una opción", // Subtítulo fijo, o puedes obtenerlo del backend si lo tienes
+                      "Selecciona una opción", 
                       style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w200),
                     ),
                   ),
                   ...currentQuestion.opcionesRespuesta.asMap().entries.map<Widget>((entry) {
-                    // int idx = entry.key; // No necesitamos el índice local aquí
                     OpcionRespuesta option = entry.value;
                     final bool isSelected = _userSelections[currentQuestion.id] == option.id;
 
                     return Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                      child: CheckboxListTile( // Usamos CheckboxListTile por el estilo, pero es para selección única
+                      child: CheckboxListTile( 
                         contentPadding: EdgeInsets.all(20.w),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.r),
@@ -198,24 +187,22 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                         selected: isSelected,
                         selectedTileColor: const Color(0xfffff0f0),
                         secondary: Icon(
-                          isSelected ? Icons.radio_button_checked : Icons.radio_button_off, // Iconos de radio
+                          isSelected ? Icons.radio_button_checked : Icons.radio_button_off, 
                           color: const Color(0xffe20612),
                         ),
-                        // Aquí la clave: usamos null para simular radio buttons
-                        // el valor del checkbox siempre es true si está seleccionado
-                        value: isSelected, // Esto es solo para visualización
+                        value: isSelected, 
                         onChanged: (bool? newValue) {
                           _onOptionSelected(currentQuestion.id, option.id);
                         },
                       ),
                     );
                   }),
-                  SizedBox(height: 30.h), // Espacio antes de los botones
+                  SizedBox(height: 30.h), 
                   RedButton(
                     text: _currentQuestionIndex == questions.length - 1 ? "Finalizar" : "Siguiente",
                     onPressed: _nextQuestion,
                   ),
-                  SizedBox(height: 10.h), // Espacio entre los botones
+                  SizedBox(height: 10.h), 
                   SecondaryTextButton(
                     text: _currentQuestionIndex > 0 ? "Atrás" : "Salir",
                     onPressed: _previousQuestion,

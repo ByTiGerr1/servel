@@ -24,7 +24,6 @@ Widget buildProgressRow({
       ),
     );
 
-    // Añadir espacio excepto después del último
     if (i < total - 1) {
       children.add(SizedBox(width: spacing.w));
     }

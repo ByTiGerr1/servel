@@ -58,22 +58,22 @@ class RespuestaUsuario(models.Model):
 
     class Meta:
         verbose_name_plural = "Respuestas de Usuarios"
-        unique_together = ('user', 'pregunta') # Un usuario solo puede responder una pregunta una vez
+        unique_together = ('user', 'pregunta')
 
     def __str__(self):
         return f"{self.user.username} respondió '{self.opcion_elegida.texto}' a '{self.pregunta.texto[:30]}...'"
 
 class MatchCandidato(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_candidato')
-    candidato = models.ForeignKey('Candidato', on_delete=models.CASCADE) # Usar 'Candidato' como string si Candidato está definido más abajo
+    candidato = models.ForeignKey('Candidato', on_delete=models.CASCADE) 
     match_percentage_value = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     num_preguntas_consideradas = models.IntegerField(default=0)
-    # Puedes añadir un campo para la fecha de la última actualización del match si es necesario
+    
     fecha_ultima_actualizacion = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = "Matches de Candidatos"
-        unique_together = ('user', 'candidato') # Un usuario solo tiene un match por candidato
+        unique_together = ('user', 'candidato') 
 
     def __str__(self):
         return f"Match de {self.user.username} con {self.candidato.nombre} {self.candidato.apellido}: {self.match_percentage_value}%"
@@ -109,8 +109,7 @@ class PosturaCandidato(models.Model):
 
     class Meta:
         verbose_name_plural = "Posturas de Candidatos"
-        unique_together = ('candidato', 'pregunta') # Un candidato solo puede tener una postura por pregunta
-
+        unique_together = ('candidato', 'pregunta') 
     def __str__(self):
         return f"{self.candidato.apellido} - {self.pregunta.texto[:30]}... ({self.opcion_respuesta.texto})"
 

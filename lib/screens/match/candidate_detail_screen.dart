@@ -17,11 +17,10 @@ class CandidateDetailScreen extends StatefulWidget {
 
 class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
   late Future<Candidato> _candidatoDetailFuture;
-  final CandidateService _candidateService = CandidateService(); // Instancia de tu servicio
+  final CandidateService _candidateService = CandidateService(); 
 
-  bool _isFavorited = false; // Estado local para favorito
-  bool _isDiscarded = false; // Estado local para descartado
-  // IDs de favorito/descartado para poder eliminarlos
+  bool _isFavorited = false; 
+  bool _isDiscarded = false; 
   int? _favoritoId;
   int? _descartadoId;
 
@@ -36,18 +35,17 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
       _candidatoDetailFuture = _candidateService.getCandidatoDetail(widget.candidatoId);
     });
 
-    // Obtener el estado actual de favorito/descartado
     try {
       final favoritos = await _candidateService.getFavoritos();
       final descartados = await _candidateService.getDescartados();
 
       final favorito = favoritos.firstWhere(
         (fav) => fav.candidatoId == widget.candidatoId,
-        orElse: () => CandidatoFavorito(id: -1, candidatoId: -1, fechaAgregado: DateTime.now()), // Sentinel value
+        orElse: () => CandidatoFavorito(id: -1, candidatoId: -1, fechaAgregado: DateTime.now()),
       );
       final descartado = descartados.firstWhere(
         (disc) => disc.candidatoId == widget.candidatoId,
-        orElse: () => CandidatoDescartado(id: -1, candidatoId: -1, fechaDescartado: DateTime.now()), // Sentinel value
+        orElse: () => CandidatoDescartado(id: -1, candidatoId: -1, fechaDescartado: DateTime.now()), 
       );
 
       setState(() {
@@ -58,7 +56,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
         _descartadoId = _isDiscarded ? descartado.id : null;
       });
     } catch (e) {
-      // Manejar el error de carga de favoritos/descartados
       _showSnackBar('Error al cargar estado de favorito/descartado: $e', Colors.red);
     }
   }
@@ -66,7 +63,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
   void _toggleFavorite() async {
     try {
       if (_isFavorited) {
-        // Si ya es favorito, lo removemos
         if (_favoritoId != null) {
           await _candidateService.removeFavorito(_favoritoId!);
           setState(() {
@@ -76,18 +72,14 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _showSnackBar('Candidato eliminado de favoritos.', Colors.orange);
         }
       } else {
-        // Si no es favorito, lo agregamos
         await _candidateService.addFavorito(widget.candidatoId);
-        // Volvemos a obtener el ID del favorito recién creado
         await _fetchCandidateDetailsAndStatus();
-         // Refresca para obtener el nuevo _favoritoId
         setState(() {
-          _isFavorited = true; // No es estrictamente necesario, _fetchCandidateDetailsAndStatus lo hará
+          _isFavorited = true;
         });
         _showSnackBar('Candidato agregado a favoritos.', Colors.green);
         widget.controller.forward();
         Navigator.pop(context);
-        // Si estaba descartado, lo quitamos de descartados
         if (_isDiscarded && _descartadoId != null) {
           await _candidateService.removeDescartado(_descartadoId!);
           setState(() {
@@ -104,7 +96,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
   void _toggleDiscarded() async {
     try {
       if (_isDiscarded) {
-        // Si ya está descartado, lo removemos
         if (_descartadoId != null) {
           await _candidateService.removeDescartado(_descartadoId!);
           setState(() {
@@ -114,16 +105,13 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _showSnackBar('Candidato eliminado de descartados.', Colors.orange);
         }
       } else {
-        // Si no está descartado, lo agregamos
         await _candidateService.addDescartado(widget.candidatoId);
-        // Volvemos a obtener el ID del descartado recién creado
-        await _fetchCandidateDetailsAndStatus(); // Refresca para obtener el nuevo _descartadoId
+        await _fetchCandidateDetailsAndStatus(); 
         setState(() {
-          _isDiscarded = true; // No es estrictamente necesario, _fetchCandidateDetailsAndStatus lo hará
+          _isDiscarded = true; 
         });
         _showSnackBar('Candidato agregado a descartados.', Colors.green);
 
-        // Si estaba en favoritos, lo quitamos de favoritos
         if (_isFavorited && _favoritoId != null) {
           await _candidateService.removeFavorito(_favoritoId!);
           setState(() {
@@ -137,19 +125,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
     }
   }
 
-  // void _submitFinalDecision(Candidato candidato) async {
-  //   try {
-  //     // Asume que la ID del tipo de elección presidencial es 1 (o la que uses)
-  //     const int tipoEleccionPresidencialId = 1; // Ajusta esto a la ID real de tu tipo de elección presidencial
-
-  //     await _candidateService.submitDecisionFinal(candidato.id, tipoEleccionPresidencialId);
-  //     _showSnackBar('¡Decisión final registrada para ${candidato.nombre}!', Colors.blue);
-  //     // Opcional: Navegar a una pantalla de confirmación o volver atrás
-  //     Navigator.pop(context);
-  //   } catch (e) {
-  //     _showSnackBar('Error al registrar decisión final: $e', Colors.red);
-  //   }
-  // }
 
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
