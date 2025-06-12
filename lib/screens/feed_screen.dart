@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import 'package:servel/models/news_article_model.dart';
 import 'package:servel/services/world_news_api_service.dart';
 
@@ -52,36 +54,59 @@ class _FeedScreenState extends State<FeedScreen> {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                NewsArticle noticia = snapshot.data![index];
+                final noticia = snapshot.data![index];
+                final dateString = DateFormat('dd/MM/yyyy').format(noticia.publishedAt);
                 return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          noticia.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (noticia.imageUrl != null && noticia.imageUrl!.isNotEmpty)
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                          child: CachedNetworkImage(
+                            imageUrl: noticia.imageUrl!,
+                            fit: BoxFit.cover,
+                            height: 180,
+                            width: double.infinity,
+                            placeholder: (context, url) => const SizedBox(
+                              height: 180,
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                            errorWidget: (context, url, error) => const SizedBox(
+                              height: 180,
+                              child: Center(child: Icon(Icons.broken_image)),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          noticia.description ?? '',
-                          style: const TextStyle(fontSize: 14),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              noticia.title,
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            if (noticia.description != null && noticia.description!.isNotEmpty)
+                              Text(
+                                noticia.description!,
+                                style: const TextStyle(fontSize: 14),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Publicado: $dateString',
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          'Publicado: ${noticia.publishedAt.day}/${noticia.publishedAt.month}/${noticia.publishedAt.year}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
