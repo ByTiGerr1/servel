@@ -85,7 +85,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _isFavorited = true;
         });
         _showSnackBar('Candidato agregado a favoritos.', Colors.green);
-        widget.controller.forward();
+        widget.controller.forward(direction: SwipDirection.Left);
         Navigator.pop(context, true);
       }
     } catch (e) {
@@ -119,7 +119,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _isDiscarded = true;
         });
         _showSnackBar('Candidato agregado a descartados.', Colors.green);
-        widget.controller.forward();
+        widget.controller.forward(direction: SwipDirection.Right);
         Navigator.pop(context, true);
       }
     } catch (e) {
