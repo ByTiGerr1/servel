@@ -37,12 +37,7 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
       backgroundColor: const Color(0xffFFFFFF),
       appBar: AppBar(
         backgroundColor: const Color(0xffFFFFFF),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-        ),
+        automaticallyImplyLeading: false,
         toolbarHeight: 110.h,
         flexibleSpace: Align(
           alignment: Alignment.center,

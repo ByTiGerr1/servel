@@ -81,8 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
         _showSnackBar('¡Login exitoso. Bienvenido!');
         print('DEBUG: Navigating to HomeScreen');
-        Navigator.pushReplacementNamed(context, '/home');
-        print('DEBUG: Navigation completed. LoginScreen is now unmounted.');
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        print('DEBUG: Navigation completed. Previous routes removed.');
       } else {
         print('DEBUG: Login failed. Status: ${response.statusCode} - Body: ${response.body}'); 
         String errorMessage = 'Error al iniciar sesión.';

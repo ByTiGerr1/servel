@@ -59,12 +59,6 @@ class MatchLaunchScreen extends StatelessWidget {
                                 }
 ,),
               ),
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                child: SecondaryTextButton(text: "Todavia no", onPressed: () {
-                  Navigator.pop(context);
-                },),
-              ),
           ],
         ),
       ),
