@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: SizedBox(
                 width: double.infinity,
                 child: buildProgressRow(

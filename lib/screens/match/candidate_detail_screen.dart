@@ -111,7 +111,9 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _isDiscarded = true; 
         });
         _showSnackBar('Candidato agregado a descartados.', Colors.green);
-
+        widget.controller.forward();
+        Navigator.pop(context);
+        
         if (_isFavorited && _favoritoId != null) {
           await _candidateService.removeFavorito(_favoritoId!);
           setState(() {
