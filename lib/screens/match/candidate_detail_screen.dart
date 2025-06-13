@@ -72,6 +72,13 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _showSnackBar('Candidato eliminado de favoritos.', Colors.orange);
         }
       } else {
+        if (_isDiscarded && _descartadoId != null) {
+          await _candidateService.removeDescartado(_descartadoId!);
+          setState(() {
+            _isDiscarded = false;
+            _descartadoId = null;
+          });
+        }
         await _candidateService.addFavorito(widget.candidatoId);
         await _fetchCandidateDetailsAndStatus();
         setState(() {
@@ -80,13 +87,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
         _showSnackBar('Candidato agregado a favoritos.', Colors.green);
         widget.controller.forward();
         Navigator.pop(context, true);
-        if (_isDiscarded && _descartadoId != null) {
-          await _candidateService.removeDescartado(_descartadoId!);
-          setState(() {
-            _isDiscarded = false;
-            _descartadoId = null;
-          });
-        }
       }
     } catch (e) {
       _showSnackBar('Error al procesar favorito: $e', Colors.red);
@@ -105,15 +105,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
           _showSnackBar('Candidato eliminado de descartados.', Colors.orange);
         }
       } else {
-        await _candidateService.addDescartado(widget.candidatoId);
-        await _fetchCandidateDetailsAndStatus(); 
-        setState(() {
-          _isDiscarded = true; 
-        });
         _showSnackBar('Candidato agregado a descartados.', Colors.green);
-        widget.controller.forward();
-        Navigator.pop(context);
-
         if (_isFavorited && _favoritoId != null) {
           await _candidateService.removeFavorito(_favoritoId!);
           setState(() {
@@ -121,6 +113,14 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
             _favoritoId = null;
           });
         }
+        await _candidateService.addDescartado(widget.candidatoId);
+        await _fetchCandidateDetailsAndStatus();
+        setState(() {
+          _isDiscarded = true;
+        });
+        _showSnackBar('Candidato agregado a descartados.', Colors.green);
+        widget.controller.forward();
+        Navigator.pop(context, true);
       }
     } catch (e) {
       _showSnackBar('Error al procesar descartado: $e', Colors.red);
