@@ -37,13 +37,15 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
   Future<List<MatchResult>> _loadMatchResults() async {
     final results = await _candidateService.getMatchCandidatos(widget.tipoEleccionId);
     final favoritos = await _candidateService.getFavoritos();
+    final descartados = await _candidateService.getDescartados();
     final favoriteIds = favoritos.map((f) => f.candidatoId).toSet();
+    final discardedIds = descartados.map((d) => d.candidatoId).toSet();
 
     final filtered = results
         .where((result) {
           final candidato = result.candidato;
           if (candidato == null) return false;
-          return !favoriteIds.contains(candidato.id);
+          return !favoriteIds.contains(candidato.id) && !discardedIds.contains(candidato.id);
         })
         .toList();
 
