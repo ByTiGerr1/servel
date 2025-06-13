@@ -22,6 +22,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
   final CandidateService _candidateService = CandidateService();
   final TCardController _controller = TCardController();
   bool _hasShownRightSwipeMessage = false;
+  List<Candidato> _candidatos = [];
 
   @override
   void initState() {
@@ -38,13 +39,20 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
     final favoritos = await _candidateService.getFavoritos();
     final favoriteIds = favoritos.map((f) => f.candidatoId).toSet();
 
-    return results
+    final filtered = results
         .where((result) {
           final candidato = result.candidato;
           if (candidato == null) return false;
           return !favoriteIds.contains(candidato.id);
         })
         .toList();
+
+    _candidatos = filtered
+        .where((r) => r.candidato != null)
+        .map((r) => r.candidato!)
+        .toList();
+
+    return filtered;
   }
 
   @override
@@ -91,10 +99,12 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
             );
           } else {
       final matchResults = snapshot.data!;
-      final cards = matchResults
-      .where((result) => result.candidato != null)
-      .map((result) => _buildCandidateCard(result.candidato!))
-      .toList();
+      _candidatos = matchResults
+          .where((result) => result.candidato != null)
+          .map((result) => result.candidato!)
+          .toList();
+
+      final cards = _candidatos.map((candidato) => _buildCandidateCard(candidato)).toList();
     
       return Column(
     children: [
@@ -103,9 +113,31 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
           cards: cards,
           controller: _controller,
           onForward: (index, info) {
+            final swipedIndex = index - 1;
+            if (swipedIndex >= 0 && swipedIndex < _candidatos.length) {
+              final candidato = _candidatos[swipedIndex];
+              if (info.direction == SwipDirection.Left) {
+                _candidateService.addFavorito(candidato.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Candidato agregado a favoritos')),
+                );
+                setState(() {
+                  _candidatos.removeAt(swipedIndex);
+                });
+              } else if (info.direction == SwipDirection.Right) {
+                _candidateService.addDescartado(candidato.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Candidato agregado a descartados')),
+                );
+                setState(() {
+                  _candidatos.removeAt(swipedIndex);
+                });
+              }
+            }
+
             if (!_hasShownRightSwipeMessage && info.direction == SwipDirection.Right) {
               _hasShownRightSwipeMessage = true;
-    
+
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Ahora verás más información sobre este candidato'),
@@ -114,7 +146,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
               );
             }
     
-            if (index == cards.length) {
+            if (_candidatos.isEmpty || index >= _candidatos.length) {
               Future.microtask(() {
                 Navigator.pushReplacement(
                   context,
@@ -140,13 +172,21 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
       }
   Widget _buildCandidateCard(Candidato candidato) {
   return GestureDetector(
-    onTap: () {
-      Navigator.push(
+    onTap: () async {
+      final removed = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
-          builder: (context) => CandidateDetailScreen(candidatoId: candidato.id, controller: _controller),
+          builder: (context) => CandidateDetailScreen(
+            candidatoId: candidato.id,
+            controller: _controller,
+          ),
         ),
       );
+      if (removed == true) {
+        setState(() {
+          _candidatos.removeWhere((c) => c.id == candidato.id);
+        });
+      }
     },
     child: Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

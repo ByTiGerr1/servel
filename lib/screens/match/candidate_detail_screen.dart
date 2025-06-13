@@ -79,7 +79,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
         });
         _showSnackBar('Candidato agregado a favoritos.', Colors.green);
         widget.controller.forward();
-        Navigator.pop(context);
+        Navigator.pop(context, true);
         if (_isDiscarded && _descartadoId != null) {
           await _candidateService.removeDescartado(_descartadoId!);
           setState(() {
@@ -113,7 +113,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
         _showSnackBar('Candidato agregado a descartados.', Colors.green);
         widget.controller.forward();
         Navigator.pop(context);
-        
+
         if (_isFavorited && _favoritoId != null) {
           await _candidateService.removeFavorito(_favoritoId!);
           setState(() {
