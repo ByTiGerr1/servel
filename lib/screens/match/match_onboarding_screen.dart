@@ -30,7 +30,6 @@ class MatchLaunchScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            // Imágenes
             Container(
               padding: EdgeInsets.only(top: 35),
               child: Row(
@@ -42,7 +41,6 @@ class MatchLaunchScreen extends StatelessWidget {
               ),
             ),
             
-            // Botón "Haz match"
             Padding(
                 padding: EdgeInsets.only(top: 45.h),
                 child: RedButton(text: "Haz Match", 

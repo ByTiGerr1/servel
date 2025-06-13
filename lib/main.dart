@@ -7,6 +7,7 @@ import 'package:servel/screens/launcher_screen.dart';
 import 'package:servel/screens/match/match_over_screen.dart';
 import 'package:servel/screens/match/match_results_screen.dart';
 import 'package:servel/screens/auth/register_screen.dart';
+import 'package:servel/screens/help_support_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -43,7 +44,8 @@ class MainApp extends StatelessWidget {
             '/matchOver': (context) => const MatchOverScreen(),            
             '/home': (context) => const HomeScreen(),            
             '/register': (context) => const RegisterScreen(),            
-            '/login': (context) => const LoginScreen(),            
+            '/login': (context) => const LoginScreen(),  
+            '/helpSupport': (context) => const HelpSupportScreen(),          
           },
         );
       },

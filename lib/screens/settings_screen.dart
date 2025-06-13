@@ -96,7 +96,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black54),
             ),
             const SizedBox(height: 8),
-            _buildSettingTile(Icons.headphones_outlined, 'Ayuda y Soporte'),
+              _buildSettingTile(
+              Icons.headphones_outlined,
+              'Ayuda y Soporte',
+              onTap: () {
+                Navigator.pushNamed(context, '/helpSupport');
+              },
+            ),
             const SizedBox(height: 24),
             TextButton(
               onPressed: _logoutUser,
