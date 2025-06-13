@@ -114,10 +114,6 @@ class _FavoritesCandidatesScreenState extends State<FavoritesCandidatesScreen> {
                           Text('Partido: ${candidato.partido}', style: const TextStyle(color: Colors.redAccent)),
                           Text('Ciudad: ${candidato.ciudad}', style: TextStyle(color: Colors.grey[700])),
                           const SizedBox(height: 4),
-                          Text(
-                            'Agregado el: ${favorito.fechaAgregado.day}/${favorito.fechaAgregado.month}/${favorito.fechaAgregado.year}',
-                            style: const TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
                         ],
                       ),
                       trailing: IconButton(
@@ -131,7 +127,6 @@ class _FavoritesCandidatesScreenState extends State<FavoritesCandidatesScreen> {
           }
         },
       ),
-      // Puedes añadir un FloatingActionButton para añadir/eliminar favoritos si lo implementas
     );
   }
 }

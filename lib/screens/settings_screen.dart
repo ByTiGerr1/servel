@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'Account Settings',
+          'Ajustes',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
@@ -96,8 +96,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black54),
             ),
             const SizedBox(height: 8),
-            _buildSettingTile(Icons.notifications_none, 'Notificaciones'),
-            _buildSettingTile(Icons.language, 'Lenguaje'),
             _buildSettingTile(Icons.headphones_outlined, 'Ayuda y Soporte'),
             const SizedBox(height: 24),
             TextButton(

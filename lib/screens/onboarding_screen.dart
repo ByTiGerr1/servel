@@ -53,7 +53,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       _controller.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
     } else {
-      // Aquí irías a la pantalla principal o home
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const RegistroOpcionesScreen()),
       );

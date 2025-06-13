@@ -29,5 +29,8 @@ Widget buildProgressRow({
     }
   }
 
-  return Row(children: children);
+  return SizedBox(
+    width: double.infinity,
+    child: Row(children: children),
+  );
 }

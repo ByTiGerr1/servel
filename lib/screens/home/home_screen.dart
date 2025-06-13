@@ -36,23 +36,30 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text("Conoce tu voto", style: TextStyle(
-                    fontSize: 17.sp, 
-                    fontWeight: FontWeight.bold
-                  ),),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Conoce tu voto",
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: buildProgressRow(total: 2, activeIndex: 0),
-              )
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: buildProgressRow(
+                  total: _screens.length,
+                  activeIndex: _selectedIndex,
+                ),
+              ),
+            ),
+          ],
+        ),
           
       ),
       body: _screens[_selectedIndex],

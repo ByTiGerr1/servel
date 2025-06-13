@@ -141,24 +141,15 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
     return Scaffold(
             appBar: AppBar(
             backgroundColor: Colors.white,
-            title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text("Conoce tu voto", style: TextStyle(
-                        fontSize: 17.sp, 
-                        fontWeight: FontWeight.bold
-                      ),),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: buildProgressRow(total: 2, activeIndex: 0),
-                  )
-                ],
+            title: Text(
+              "Conoce tu voto",
+              style: TextStyle(
+                fontSize: 17.sp,
+                fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
+            ),
+            centerTitle: true,
           ),
       body: FutureBuilder<Candidato>(
         future: _candidatoDetailFuture,
