@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:servel/screens/auth/login_screen.dart';
 import 'package:servel/screens/auth/register_screen.dart';
-import 'package:servel/screens/registro/registro_opcion_google.dart';
-import 'package:servel/screens/registro/registro_opcion_numero.dart';
+
+
 
 class RegistroOpcionesScreen extends StatefulWidget {
   const RegistroOpcionesScreen({super.key});
@@ -131,31 +131,7 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
                 ),
               ),
 
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 5.h),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: OutlinedButton.icon(
-                  icon: const Icon(Icons.phone),
-                  label: Text("Regístrate con número de teléfono",
-                      style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400),),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegistroOpcionNumero()));
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: const Color(0xffFFFFFF),
-                    foregroundColor: Colors.black,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                ),
-              ),
+
 
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5.h),
@@ -163,33 +139,7 @@ class _RegistroOpcionesScreenState extends State<RegistroOpcionesScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: OutlinedButton.icon(
                   icon: const Icon(Icons.g_mobiledata_rounded),
-                  label: Text("Regístrate con Google",
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400)),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegistroOpcionGoogle()));
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: const Color(0xffFFFFFF),
-                    foregroundColor: Colors.black,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15.h, horizontal: 30.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                ),
-              ),
-
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 5.h),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: OutlinedButton.icon(
-                  icon: const Icon(Icons.g_mobiledata_rounded),
-                  label: Text("Regístrate localmente",
+                  label: Text("Regístrate",
                       style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400)),
                   onPressed: () {
                     Navigator.push(

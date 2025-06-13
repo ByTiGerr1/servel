@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:servel/screens/preguntas/questionnaire_screen.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; 
 
@@ -81,14 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
         print('DEBUG: Token guardado en FlutterSecureStorage: $token');
 
         _showSnackBar('¡Login exitoso. Bienvenido!');
-        print('DEBUG: Navigating to QuestionnaireScreen'); 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuestionnaireScreen(tipoEleccionId: 1, tipoEleccionNombre: 'Presidencial'),
-          ),
-        );
-        print('DEBUG: Navigation completed. LoginScreen is now unmounted.'); 
+        print('DEBUG: Navigating to HomeScreen');
+        Navigator.pushReplacementNamed(context, '/home');
+        print('DEBUG: Navigation completed. LoginScreen is now unmounted.');
       } else {
         print('DEBUG: Login failed. Status: ${response.statusCode} - Body: ${response.body}'); 
         String errorMessage = 'Error al iniciar sesión.';
