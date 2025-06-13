@@ -114,26 +114,32 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
         child: TCard(
           cards: cards,
           controller: _controller,
-          onForward: (index, info) {
+          onForward: (index, info) async {
             final swipedIndex = index - 1;
             if (swipedIndex >= 0 && swipedIndex < _candidatos.length) {
               final candidato = _candidatos[swipedIndex];
-              if (info.direction == SwipDirection.Left) {
-                _candidateService.addFavorito(candidato.id);
+              try {
+                if (info.direction == SwipDirection.Left) {
+                  await _candidateService.addFavorito(candidato.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Candidato agregado a favoritos')),
+                  );
+                  setState(() {
+                    _candidatos.removeAt(swipedIndex);
+                  });
+                } else if (info.direction == SwipDirection.Right) {
+                  await _candidateService.addDescartado(candidato.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Candidato agregado a descartados')),
+                  );
+                  setState(() {
+                    _candidatos.removeAt(swipedIndex);
+                  });
+                }
+              } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Candidato agregado a favoritos')),
+                  SnackBar(content: Text('Error al procesar candidato: $e')),
                 );
-                setState(() {
-                  _candidatos.removeAt(swipedIndex);
-                });
-              } else if (info.direction == SwipDirection.Right) {
-                _candidateService.addDescartado(candidato.id);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Candidato agregado a descartados')),
-                );
-                setState(() {
-                  _candidatos.removeAt(swipedIndex);
-                });
               }
             }
 
